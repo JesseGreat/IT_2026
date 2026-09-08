@@ -1185,6 +1185,131 @@ main { padding: 1.5rem 1.15rem calc(var(--nav-h) + 3.4rem); }
 }
 .faq__item.is-open .faq__a { display: block; }
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   COMING SOON — the holding page for programmes not yet published
+   ═════════════════════════════════════════════════════════════════════════ */
+.soon {
+  position: relative;
+  overflow: hidden;
+  margin-top: .5rem;
+  padding: 3.2rem 1.4rem 3.6rem;
+  text-align: center;
+  border: 1px solid rgba(201, 162, 39, .3);
+  background:
+    radial-gradient(120% 80% at 50% 0%, rgba(31, 90, 61, .5) 0%, transparent 62%),
+    rgba(255, 255, 255, .02);
+}
+/* an engraved inner rule, as on the invitation */
+.soon::after {
+  content: "";
+  position: absolute;
+  inset: .5rem;
+  border: 1px solid rgba(201, 162, 39, .16);
+  pointer-events: none;
+}
+.soon__inner { position: relative; z-index: 2; }
+
+/* the laurel heart */
+.soon__heart {
+  width: min(11.5rem, 52vw);
+  margin: 0 auto 1.5rem;
+  animation: heartbeat 4.2s ease-in-out infinite;
+}
+.soon__heart svg { width: 100%; height: auto; display: block; }
+.soon__heart g {
+  fill: var(--olive-500);
+  stroke: var(--olive-500);
+  stroke-width: 1;
+  stroke-linejoin: round;
+  opacity: .9;
+}
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); }
+  8%       { transform: scale(1.045); }
+  16%      { transform: scale(1); }
+  24%      { transform: scale(1.03); }
+  32%      { transform: scale(1); }
+}
+
+/* O │ O */
+.soon__mono {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.05rem;
+  font-family: var(--display);
+  font-weight: 300;
+  font-size: clamp(3.2rem, 17vw, 4.6rem);
+  line-height: 1;
+  color: var(--gold-300);
+}
+.soon__bar {
+  display: block;
+  width: 1px;
+  height: clamp(2.6rem, 13vw, 3.6rem);
+  background: linear-gradient(to bottom,
+    transparent, var(--gold-500) 22%, var(--gold-500) 78%, transparent);
+}
+.soon__year {
+  margin-top: .7rem;
+  font-size: .78rem;
+  letter-spacing: .52em;
+  text-indent: .52em;          /* the tracking would otherwise push it left */
+  color: var(--gold-500);
+}
+
+.soon__headline {
+  margin-top: 1.9rem;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(1.7rem, 8vw, 2.2rem);
+  color: var(--paper-100);
+}
+.soon__headline::before,
+.soon__headline::after {
+  content: "";
+  display: inline-block;
+  width: 1.6rem;
+  height: 1px;
+  margin: 0 .8rem;
+  vertical-align: .34em;
+  background: rgba(201, 162, 39, .5);
+}
+.soon__note {
+  max-width: 22rem;
+  margin: .85rem auto 0;
+  font-family: var(--display);
+  font-size: 1.02rem;
+  line-height: 1.7;
+  color: rgba(244, 236, 216, .58);
+}
+
+/* petals drifting down behind it all */
+.soon__petals { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+.petal {
+  position: absolute;
+  top: -8%;
+  border-radius: 0 100% 0 100%;
+  background: var(--olive-400);
+  opacity: 0;
+  animation-name: drift;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+.petal:nth-child(3n)   { background: var(--gold-500); }
+.petal:nth-child(3n+1) { background: var(--olive-300); }
+@keyframes drift {
+  0%   { transform: translateY(-10%) rotate(0deg);      opacity: 0; }
+  12%  { opacity: .30; }
+  88%  { opacity: .18; }
+  100% { transform: translateY(1100%) rotate(320deg);   opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .soon__heart { animation: none; }
+  .soon__petals { display: none; }
+}
+
 /* ── Music button ───────────────────────────────────────────────────────── */
 .music-toggle {
   position: fixed;

@@ -15,10 +15,10 @@ that barely works.
 | Page | What it does |
 |---|---|
 | `index.html` | The invitation. A sealed envelope you tap to open — that tap starts the music and triggers the reveal. Then the venue with a live map, both families, a ticking countdown, the month with the day ringed and an *add to my calendar* button, the slideshow, and the note of thanks. |
-| `church.html` | The order of service, as a booklet you turn page by page. |
-| `traditional.html` | The Yoruba engagement programme, same booklet treatment. |
-| `reception.html` | The reception timeline. On the day itself it opens straight to whatever is happening now. |
-| `details.html` | The venue with a map link, the order of the day, colours of the day as swatches, travel, the wedding party, FAQ. |
+| `church.html` | The order of service, as a booklet you turn page by page. *Currently showing Coming Soon.* |
+| `traditional.html` | The Yoruba engagement programme, same booklet treatment. *Currently showing Coming Soon.* |
+| `reception.html` | The reception timeline; on the day it opens to whatever is happening now. *Currently showing Coming Soon.* |
+| `details.html` | Venue and map, order of the day, colours as swatches, travel, wedding party, FAQ. *Currently showing Coming Soon.* |
 | `qr.html` | A private tool for you: type your live URL, get a QR code and a printable A6 table card. Not linked from the guest navigation. |
 
 ---
@@ -59,6 +59,31 @@ on a Mac) and visit `http://THAT-IP:8000` from a phone on the same wifi.
 
 ---
 
+## Coming soon, and switching pages on
+
+Only the **invitation** is live. Church, Traditional, Reception and Details all
+show a holding design — a laurel heart, `O │ O`, `2026`, *Coming Soon*.
+
+**None of the real content was deleted.** Every programme is still in
+`data.js` and still rendered by the same code. It is simply drawn over.
+
+To put a page live, set one flag to `false` in `data.js`:
+
+```js
+comingSoon: {
+  church:      false,   // ← the order of service is now live
+  traditional: true,
+  reception:   true,
+  details:     true,
+}
+```
+
+That is the whole change. Bump `CACHE` in `sw.js` afterwards so returning
+guests get it. The wording (`headline`, `note`, `year`, `initials`) lives in
+the same block.
+
+---
+
 ## Change the wording
 
 **Everything lives in one file: `assets/js/data.js`.** Names, dates, venues, all
@@ -83,7 +108,7 @@ A few things worth knowing:
   the `src="..."` URL into `venue.mapEmbed` — that overrides the search. The map
   needs the network, so it is left out entirely when a guest is offline; the
   address and both buttons still work.
-- **After editing**, bump `CACHE` in `sw.js` (`wedding-v4` → `wedding-v5`) so
+- **After editing**, bump `CACHE` in `sw.js` (`wedding-v5` → `wedding-v6`) so
   guests who already visited get the new version instead of the cached old one.
 
 ---

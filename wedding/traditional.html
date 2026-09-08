@@ -33,8 +33,10 @@
 <script src="assets/js/data.js"></script>
 <script src="assets/js/site.js"></script>
 <script src="assets/js/booklet.js"></script>
+<script src="assets/js/comingsoon.js"></script>
 <script>
   document.addEventListener("DOMContentLoaded", function () {
+    if (ComingSoon.mount("traditional")) return;
     var book = WEDDING.traditional;
     document.querySelector("[data-title]").textContent = book.title;
     document.querySelector("[data-subtitle]").textContent = book.subtitle || "";

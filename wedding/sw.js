@@ -8,7 +8,7 @@
    Bump CACHE below whenever you change content, so returning guests pick the
    new version up.
    ========================================================================== */
-const CACHE = "wedding-v4";
+const CACHE = "wedding-v5";
 
 const SHELL = [
   "./",
@@ -25,6 +25,7 @@ const SHELL = [
   "./assets/js/gallery.js",
   "./assets/js/home.js",
   "./assets/js/details.js",
+  "./assets/js/comingsoon.js",
   "./assets/img/favicon.svg",
 ];
 

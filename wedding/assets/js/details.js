@@ -105,6 +105,7 @@
   }
 
   document.addEventListener("DOMContentLoaded", () => {
+    if (window.ComingSoon && ComingSoon.mount("details")) return;
     const d = W.details || {};
     $("#details").innerHTML =
       venuePanel() +

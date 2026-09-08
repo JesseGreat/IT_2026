@@ -76,6 +76,25 @@ const WEDDING = {
     { name: "Olive Green", hex: "#6F7742" },
   ],
 
+  /* ── 5b. COMING SOON ────────────────────────────────────────────────────
+     While a flag below is true, that page shows the holding design instead
+     of its programme. The real content stays exactly where it is — flip a
+     flag to false and that page goes live immediately.
+
+         church: false,      ← do this when the order of service is ready
+     ───────────────────────────────────────────────────────────────────── */
+  comingSoon: {
+    church:      true,
+    traditional: true,
+    reception:   true,
+    details:     true,
+
+    initials: ["O", "O"],          // shown as  O │ O
+    year:     "2026",
+    headline: "Coming Soon",
+    note:     "Our full programme will appear here",   // set to null to hide
+  },
+
   /* ── 6. THE THREE BOOKLETS ──────────────────────────────────────────────
      Each booklet is a list of PAGES. Each page has a heading, an optional
      subtitle, and a list of ITEMS.
