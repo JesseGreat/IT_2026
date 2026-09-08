@@ -1,0 +1,13 @@
+{
+  "name": "Oluwabukola & Oluwatobiloba — Wedding",
+  "short_name": "O & O",
+  "description": "Invitation, order of service and programmes.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#06170F",
+  "theme_color": "#06170F",
+  "icons": [
+    { "src": "assets/img/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

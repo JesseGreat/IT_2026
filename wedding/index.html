@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>{{names}} — You Are Invited</title>
+<meta name="description" content="The wedding invitation, order of service and programmes.">
+<meta name="theme-color" content="#06170F">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Karla:wght@400;500&display=swap">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<header data-masthead></header>
+
+<main>
+  <div class="wrap">
+
+    <section class="card reveal" id="invitation" aria-label="Wedding invitation"></section>
+
+    <section id="venueSection" aria-labelledby="venueTitle"></section>
+
+    <section id="parentsSection" aria-label="Our families"></section>
+
+    <div class="countdown" id="countdown" aria-live="off"></div>
+
+    <div id="calendar"></div>
+
+    <section class="section" id="gallerySection">
+      <div class="section__head">
+        <h2 class="section__title" id="galleryTitle"></h2>
+        <svg class="fleuron" width="88" height="12" viewBox="0 0 88 12" fill="none"
+             stroke="currentColor" stroke-width="1" aria-hidden="true">
+          <path d="M0 6h30"/><path d="M58 6h30"/>
+          <path d="M44 1.5c3.1 2 4.7 3.4 4.7 4.5S47.1 8.5 44 10.5C40.9 8.5 39.3 7.1 39.3 6S40.9 3.5 44 1.5Z"/>
+          <circle cx="34.5" cy="6" r="1.1"/><circle cx="53.5" cy="6" r="1.1"/>
+        </svg>
+      </div>
+      <div id="gallery"></div>
+    </section>
+
+    <section class="thanks" id="thanksSection" aria-labelledby="thanksTitle">
+      <svg class="fleuron" width="88" height="12" viewBox="0 0 88 12" fill="none"
+           stroke="currentColor" stroke-width="1" aria-hidden="true">
+        <path d="M0 6h30"/><path d="M58 6h30"/>
+        <path d="M44 1.5c3.1 2 4.7 3.4 4.7 4.5S47.1 8.5 44 10.5C40.9 8.5 39.3 7.1 39.3 6S40.9 3.5 44 1.5Z"/>
+        <circle cx="34.5" cy="6" r="1.1"/><circle cx="53.5" cy="6" r="1.1"/>
+      </svg>
+      <h2 class="thanks__title" id="thanksTitle"></h2>
+      <p class="thanks__body" id="thanksBody"></p>
+    </section>
+
+    <p class="colophon" id="colophon"></p>
+  </div>
+</main>
+
+<!-- The entrance. Tapping the seal opens the invitation and starts the music. -->
+<div class="gate" id="gate">
+  <div class="gate__inner">
+    <div class="envelope" id="envelope" role="button" tabindex="0"
+         aria-label="Open the invitation">
+      <div class="envelope__body"></div>
+      <div class="envelope__flap"></div>
+      <div class="envelope__seal" id="seal"></div>
+    </div>
+    <p class="gate__hint">Tap to open</p>
+    <p class="gate__note">Best with the sound on</p>
+  </div>
+</div>
+
+<noscript>
+  <p style="padding:2rem;text-align:center">
+    This invitation needs JavaScript switched on to open.
+  </p>
+</noscript>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/site.js"></script>
+<script src="assets/js/gallery.js"></script>
+<script src="assets/js/home.js"></script>
+</body>
+</html>

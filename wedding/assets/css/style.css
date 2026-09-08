@@ -1,0 +1,1258 @@
+/* ============================================================================
+   Oluwabukola & Oluwatobiloba — Wedding site
+   Green · olive green · beige, with antique gold as the metallic accent.
+   Mobile first.
+   You should not need to edit this file to change content — see js/data.js.
+   ========================================================================== */
+
+/* ── Tokens ─────────────────────────────────────────────────────────────── */
+:root {
+  --em-900: #06170F;
+  --em-800: #0A2418;
+  --em-700: #103122;
+  --em-600: #17452F;
+  --em-500: #1F5A3D;
+
+  --gold-700: #8A6B14;
+  --gold-500: #C9A227;
+  --gold-400: #D8B84E;
+  --gold-300: #E9D294;
+
+  /* Olive — the third colour of the day. Used for the organic, typographic
+     accents; gold stays reserved for the metallic ones. */
+  --olive-700: #4E5430;
+  --olive-600: #5F663A;
+  --olive-500: #6F7742;
+  --olive-400: #8A9256;
+  --olive-300: #A9B173;
+
+  --paper-100: #FCF8ED;
+  --paper-200: #F4ECD8;
+  --paper-300: #E8DBBD;
+  --paper-400: #D6C49E;
+
+  --ink:      #22261D;
+  --ink-soft: #5E6151;
+  --ink-faint:#8B8B78;
+
+  --display: "Cormorant Garamond", "Hoefler Text", Garamond, "Times New Roman", serif;
+  --ui: "Karla", "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+  --rule: 1px solid var(--gold-500);
+  --nav-h: 4.75rem;
+
+  --ease: cubic-bezier(.22, .61, .36, 1);
+}
+
+/* ── Reset ──────────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  min-height: 100dvh;
+  font-family: var(--ui);
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--paper-200);
+  background: var(--em-900);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+img, video { max-width: 100%; display: block; }
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+a { color: inherit; }
+h1, h2, h3, h4 { margin: 0; font-weight: 400; }
+p { margin: 0; }
+ul { margin: 0; padding: 0; list-style: none; }
+
+/* The emerald ground: a deep radial pool with a whisper of grain. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background:
+    radial-gradient(120% 80% at 50% -10%, var(--em-600) 0%, var(--em-800) 45%, var(--em-900) 100%);
+}
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: .35;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='.14'/%3E%3C/svg%3E");
+}
+
+/* ── Typography helpers ─────────────────────────────────────────────────── */
+.script {
+  font-family: var(--display);
+  font-weight: 300;
+  font-style: italic;
+  letter-spacing: .01em;
+}
+.serif { font-family: var(--display); font-weight: 400; }
+
+.label {
+  font-family: var(--ui);
+  font-size: .6875rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--gold-400);
+}
+
+/* ── Page chrome ────────────────────────────────────────────────────────── */
+.masthead {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: .85rem 1.15rem;
+  background: linear-gradient(to bottom, rgba(6,23,15,.96), rgba(6,23,15,.78));
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(201,162,39,.22);
+}
+.masthead__mono {
+  font-family: var(--display);
+  font-size: 1.2rem;
+  letter-spacing: .06em;
+  color: var(--gold-300);
+}
+.masthead__date {
+  font-family: var(--ui);
+  font-size: .68rem;
+  letter-spacing: .2em;
+  color: rgba(233,210,148,.62);
+}
+
+main { padding: 1.5rem 1.15rem calc(var(--nav-h) + 3.4rem); }
+.wrap { max-width: 34rem; margin: 0 auto; }
+.wrap--wide { max-width: 46rem; }
+
+/* ── Bottom navigation — a floating brass rail, always under the thumb ──── */
+.nav {
+  position: fixed;
+  left: 50%;
+  bottom: max(.7rem, env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  z-index: 50;
+  display: flex;
+  align-items: stretch;
+  width: min(30rem, calc(100vw - 1.4rem));
+  padding: .3rem;
+  border-radius: 2rem;
+  background: rgba(9, 34, 23, .92);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(201, 162, 39, .38);
+  box-shadow: 0 .9rem 2rem rgba(0, 0, 0, .45), inset 0 1px 0 rgba(233,210,148,.12);
+}
+.nav a {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: .18rem;
+  padding: .48rem .1rem .42rem;
+  border-radius: 1.7rem;
+  text-decoration: none;
+  color: rgba(244, 236, 216, .62);
+  font-size: .625rem;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  transition: color .25s var(--ease), background .25s var(--ease);
+}
+.nav a svg { width: 19px; height: 19px; stroke-width: 1.25; }
+.nav a[aria-current="page"] {
+  color: var(--em-900);
+  background: linear-gradient(160deg, var(--gold-300), var(--gold-500));
+  box-shadow: 0 .2rem .6rem rgba(0,0,0,.3);
+}
+.nav a:not([aria-current="page"]):hover { color: var(--gold-300); }
+
+/* ── Ornaments ──────────────────────────────────────────────────────────── */
+.fleuron { display: block; margin: 1.15rem auto; color: var(--gold-500); opacity: .85; }
+.fleuron--paper { color: var(--gold-700); opacity: .6; }
+
+.rule-pair {
+  border: 0;
+  height: 3px;
+  margin: 1.4rem 0;
+  border-top: 1px solid rgba(201,162,39,.55);
+  border-bottom: 1px solid rgba(201,162,39,.55);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   THE ENTRANCE — envelope gate
+   ═════════════════════════════════════════════════════════════════════════ */
+.gate {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+  background:
+    radial-gradient(90% 70% at 50% 40%, var(--em-700) 0%, var(--em-900) 78%);
+  transition: opacity .9s var(--ease), visibility .9s;
+}
+.gate.is-open { opacity: 0; visibility: hidden; pointer-events: none; }
+
+.gate__inner { text-align: center; perspective: 1400px; }
+
+.envelope {
+  position: relative;
+  width: min(20rem, 78vw);
+  aspect-ratio: 7 / 5;
+  margin: 0 auto;
+  transform-style: preserve-3d;
+  transition: transform 1s var(--ease), opacity .7s ease .35s;
+  cursor: pointer;
+}
+.envelope__body {
+  position: absolute;
+  inset: 0;
+  border-radius: 3px;
+  background: linear-gradient(158deg, var(--paper-100) 0%, var(--paper-200) 55%, var(--paper-300) 100%);
+  box-shadow: 0 1.4rem 3rem rgba(0,0,0,.5), inset 0 0 0 1px rgba(138,107,20,.28);
+  overflow: hidden;
+}
+/* the two lower folds of the envelope, drawn with clipped triangles */
+.envelope__body::before,
+.envelope__body::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(138,107,20,.10), rgba(138,107,20,.04));
+}
+.envelope__body::before { clip-path: polygon(0 0, 50% 62%, 0 100%); }
+.envelope__body::after  { clip-path: polygon(100% 0, 50% 62%, 100% 100%); }
+
+.envelope__flap {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 62%;
+  transform-origin: top center;
+  transform: rotateX(0deg);
+  transition: transform 1.05s var(--ease);
+  background: linear-gradient(180deg, var(--paper-200), var(--paper-300));
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  box-shadow: 0 .35rem .8rem rgba(0,0,0,.18);
+  z-index: 3;
+}
+.envelope__seal {
+  position: absolute;
+  top: 62%;
+  left: 50%;
+  z-index: 4;
+  width: 4.4rem;
+  height: 4.4rem;
+  transform: translate(-50%, -50%);
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  font-family: var(--display);
+  font-size: 1.35rem;
+  letter-spacing: .04em;
+  color: var(--paper-100);
+  background: radial-gradient(circle at 34% 30%, #7E2436 0%, #5C1826 58%, #3F0F1B 100%);
+  box-shadow: 0 .4rem 1rem rgba(0,0,0,.45), inset 0 0 0 2px rgba(233,210,148,.35);
+  transition: transform .45s var(--ease), opacity .45s ease;
+}
+.envelope__seal::after {
+  content: "";
+  position: absolute;
+  inset: .38rem;
+  border-radius: 50%;
+  border: 1px dashed rgba(233,210,148,.45);
+}
+
+.gate__hint {
+  margin-top: 2rem;
+  font-size: .7rem;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: rgba(233,210,148,.72);
+  animation: breathe 3.4s ease-in-out infinite;
+}
+.gate__note {
+  margin-top: .55rem;
+  font-size: .64rem;
+  letter-spacing: .12em;
+  color: rgba(244,236,216,.35);
+}
+@keyframes breathe { 0%,100% { opacity: .45 } 50% { opacity: 1 } }
+
+/* opening */
+.gate.is-opening .envelope__flap { transform: rotateX(-172deg); }
+.gate.is-opening .envelope__seal { transform: translate(-50%,-50%) scale(.4); opacity: 0; }
+.gate.is-opening .envelope { transform: translateY(14%) scale(1.14); opacity: 0; }
+.gate.is-opening .gate__hint,
+.gate.is-opening .gate__note { opacity: 0; transition: opacity .3s; }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   THE INVITATION CARD
+   ═════════════════════════════════════════════════════════════════════════ */
+.card {
+  position: relative;
+  padding: 2.9rem 1.6rem 2.6rem;
+  text-align: center;
+  color: var(--ink);
+  background:
+    linear-gradient(163deg, var(--paper-100) 0%, var(--paper-200) 58%, var(--paper-300) 100%);
+  box-shadow: 0 1.6rem 3.4rem rgba(0,0,0,.45);
+}
+/* engraved double frame, inset from the paper edge */
+.card::before {
+  content: "";
+  position: absolute;
+  inset: .55rem;
+  border: 1px solid rgba(138,107,20,.55);
+  pointer-events: none;
+}
+.card::after {
+  content: "";
+  position: absolute;
+  inset: .78rem;
+  border: 1px solid rgba(138,107,20,.28);
+  pointer-events: none;
+}
+
+/* Vertical rhythm inside the card, in the manner of engraved stationery:
+   generous around the names, tighter within a group of related lines. */
+.card > * + * { margin-top: 1.15rem; }
+.card > .label + .card__invite { margin-top: 1.9rem; }
+.card__names { margin-top: 2.1rem !important; }
+.card > .fleuron { margin-top: 2rem; margin-bottom: 2rem; }
+.card > .card__date + .card__city { margin-top: 1.6rem; }
+.card > .card__city + .card__schedule { margin-top: 1.6rem; }
+.card > .card__schedule + .card__parents { margin-top: 1.5rem; }
+.card > * + .card__foot { margin-top: 1.8rem; }
+
+.card__names {
+  font-family: var(--display);
+  font-weight: 300;
+  font-size: clamp(2.6rem, 13.5vw, 4.1rem);
+  line-height: .96;
+  letter-spacing: -.005em;
+  color: var(--em-700);
+}
+.card__amp {
+  display: block;
+  margin: .35rem 0;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(1.5rem, 7vw, 2.1rem);
+  color: var(--gold-700);
+}
+.card__invite {
+  margin: 0 auto;
+  max-width: 21rem;
+  font-family: var(--display);
+  font-size: 1.06rem;
+  line-height: 1.75;
+  color: var(--ink-soft);
+  white-space: pre-line;
+}
+.card__date {
+  font-family: var(--display);
+  font-size: 1.22rem;
+  line-height: 1.5;
+  color: var(--em-700);
+}
+.card__year {
+  font-family: var(--ui);
+  font-size: .66rem;
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  color: var(--gold-700);
+}
+.card__city {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 1.22rem;
+  line-height: 1.35;
+  color: var(--em-700);
+}
+.card__address {
+  display: block;
+  margin-top: .3rem;
+  font-family: var(--ui);
+  font-style: normal;
+  font-size: .74rem;
+  line-height: 1.6;
+  letter-spacing: .01em;
+  color: var(--ink-soft);
+  white-space: pre-line;
+}
+.card__foot {
+  font-size: .68rem;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+/* The order of the day, set like a printed programme with dotted leaders. */
+.card__schedule {
+  max-width: 19rem;
+  margin-inline: auto;
+  padding: .9rem 0;
+  border-top: 1px solid rgba(78, 84, 48, .28);
+  border-bottom: 1px solid rgba(78, 84, 48, .28);
+}
+.panel .card__schedule { max-width: none; }
+.sched__row {
+  display: flex;
+  align-items: baseline;
+  gap: .55rem;
+  padding: .3rem 0;
+}
+.sched__label {
+  font-size: .64rem;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: var(--olive-600);
+  white-space: nowrap;
+}
+.sched__dots {
+  flex: 1 1 auto;
+  min-width: .8rem;
+  border-bottom: 1px dotted rgba(78, 84, 48, .5);
+  transform: translateY(-.22em);
+}
+.sched__time {
+  font-family: var(--display);
+  font-size: 1.06rem;
+  color: var(--em-700);
+  white-space: nowrap;
+}
+/* On the details page each line of the order of the day opens its booklet. */
+.sched__row--link {
+  text-decoration: none;
+  color: inherit;
+  transition: background .2s;
+  margin-inline: -.4rem;
+  padding-inline: .4rem;
+}
+.sched__row--link:hover { background: rgba(111, 119, 66, .1); }
+.sched__row--link .sched__label { color: var(--olive-700); }
+
+/* Both families, named as they would be on the printed card. */
+.card__parents {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: .9rem 1.1rem;
+}
+.parents__col { text-align: center; }
+.parents__side {
+  display: block;
+  font-size: .58rem;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--olive-600);
+  margin-bottom: .25rem;
+}
+.parents__names {
+  display: block;
+  font-family: var(--display);
+  font-size: 1.02rem;
+  line-height: 1.35;
+  color: var(--em-700);
+}
+
+/* staggered reveal after the envelope opens */
+.reveal > * { opacity: 0; transform: translateY(14px); }
+.reveal.is-revealed > * {
+  opacity: 1;
+  transform: none;
+  transition: opacity .95s var(--ease), transform .95s var(--ease);
+}
+.reveal.is-revealed > *:nth-child(1) { transition-delay: .05s }
+.reveal.is-revealed > *:nth-child(2) { transition-delay: .16s }
+.reveal.is-revealed > *:nth-child(3) { transition-delay: .27s }
+.reveal.is-revealed > *:nth-child(4) { transition-delay: .38s }
+.reveal.is-revealed > *:nth-child(5) { transition-delay: .49s }
+.reveal.is-revealed > *:nth-child(6) { transition-delay: .60s }
+.reveal.is-revealed > *:nth-child(7) { transition-delay: .71s }
+.reveal.is-revealed > *:nth-child(8) { transition-delay: .82s }
+
+/* ── The venue, with its map ────────────────────────────────────────────── */
+.venue { margin-top: 1.5rem; }
+
+.venue__map {
+  position: relative;
+  margin-top: 1.2rem;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border: 1px solid rgba(138, 107, 20, .45);
+  background: var(--paper-300);
+}
+@media (min-width: 34rem) { .venue__map { aspect-ratio: 16 / 9; } }
+.venue__map iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+  /* pulled a little toward the warmth of the paper it sits on */
+  filter: saturate(.78) sepia(.1) contrast(1.02);
+}
+
+.venue__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .55rem;
+  margin-top: 1rem;
+}
+.venue__actions .panel__link { margin-top: 0; }
+.panel__link--ghost {
+  color: var(--em-700);
+  background: transparent;
+  border-color: rgba(138, 107, 20, .6);
+}
+.panel__link--ghost:hover { background: rgba(111, 119, 66, .12); }
+
+/* ── Both families, on the emerald ground between two paper blocks ──────── */
+.families {
+  margin-top: 2.2rem;
+  padding: 1.6rem 1.2rem;
+  border-top: 1px solid rgba(201, 162, 39, .3);
+  border-bottom: 1px solid rgba(201, 162, 39, .3);
+}
+.families__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+@media (min-width: 30rem) {
+  .families__grid { grid-template-columns: 1fr 1fr; gap: 1.1rem 1.4rem; }
+}
+.families__col { text-align: center; }
+.families__side {
+  display: block;
+  margin-bottom: .4rem;
+  font-size: .6rem;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--olive-300);
+}
+.families__names {
+  display: block;
+  font-family: var(--display);
+  font-size: 1.32rem;
+  line-height: 1.35;
+  color: var(--paper-100);
+}
+
+/* countdown strip under the card — ticks every second */
+.countdown {
+  display: flex;
+  justify-content: center;
+  gap: clamp(.7rem, 4vw, 1.5rem);
+  margin-top: 1.9rem;
+}
+.countdown div { text-align: center; min-width: 3.1rem; }
+.countdown b {
+  display: block;
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(1.6rem, 8vw, 2.1rem);
+  line-height: 1;
+  color: var(--gold-300);
+  font-variant-numeric: tabular-nums;
+}
+.countdown span {
+  font-size: .56rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: rgba(244,236,216,.45);
+}
+.countdown__today b { color: var(--gold-300); font-size: 2.2rem; }
+
+/* ── The month, with the day ringed ─────────────────────────────────────── */
+.cal {
+  max-width: 18.5rem;
+  margin: 2.2rem auto 0;
+  padding: 1.1rem 1.15rem 1.25rem;
+  border: 1px solid rgba(201, 162, 39, .3);
+  background: rgba(255, 255, 255, .025);
+}
+.cal__month {
+  text-align: center;
+  font-family: var(--display);
+  font-size: 1.2rem;
+  letter-spacing: .02em;
+  color: var(--paper-100);
+}
+.cal__grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: .18rem;
+  margin-top: .75rem;
+}
+.cal__dow {
+  padding-bottom: .3rem;
+  font-size: .58rem;
+  text-align: center;
+  letter-spacing: .04em;
+  color: var(--olive-300);
+}
+.cal__day {
+  /* square cells, so the marker on the day is a true circle */
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  margin: 0 auto;
+  font-size: .78rem;
+  border-radius: 50%;
+  color: rgba(244, 236, 216, .6);
+  font-variant-numeric: tabular-nums;
+}
+.cal__day.is-day {
+  color: var(--em-900);
+  background: linear-gradient(160deg, var(--gold-300), var(--gold-500));
+  box-shadow: 0 .2rem .5rem rgba(0, 0, 0, .4);
+}
+.cal__add {
+  display: block;
+  width: 100%;
+  margin-top: 1rem;
+  padding: .6rem .8rem;
+  font-size: .62rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--gold-300);
+  border: 1px solid rgba(201, 162, 39, .4);
+  background: rgba(255, 255, 255, .03);
+  transition: background .25s, color .25s;
+}
+.cal__add:hover { background: rgba(201, 162, 39, .14); color: var(--paper-100); }
+
+/* ── The crest, standing in until the photographs arrive ────────────────── */
+.crest { text-align: center; }
+
+.crest__medallion {
+  max-width: 15.5rem;
+  margin: .4rem auto 0;
+}
+.crest__medallion svg { width: 100%; height: auto; display: block; }
+
+.crest__laurel {
+  fill: var(--olive-500);
+  stroke: var(--olive-500);
+  stroke-width: 1;
+  stroke-linejoin: round;
+  opacity: .92;
+}
+.crest__ring { fill: none; stroke: var(--gold-500); stroke-width: 1; }
+.crest__ring--fine { stroke-width: .5; opacity: .55; }
+
+.crest__mono {
+  font-family: var(--display);
+  font-size: 38px;
+  font-weight: 400;
+  letter-spacing: .01em;
+  fill: var(--gold-300);
+}
+
+.crest__verse {
+  max-width: 26rem;
+  margin: 1.4rem auto 0;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: rgba(244, 236, 216, .78);
+}
+.crest__ref {
+  margin-top: .5rem;
+  font-size: .6rem;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--olive-300);
+}
+.crest__note {
+  margin-top: 1.3rem;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: .98rem;
+  color: rgba(233, 210, 148, .55);
+}
+
+/* ── The note of thanks, beneath the photographs ────────────────────────── */
+.thanks {
+  margin-top: 3.2rem;
+  text-align: center;
+}
+.thanks__title {
+  font-family: var(--display);
+  font-size: 1.8rem;
+  color: var(--paper-100);
+}
+.thanks__body {
+  max-width: 30rem;
+  margin: .8rem auto 0;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 1.14rem;
+  line-height: 1.85;
+  color: rgba(244, 236, 216, .76);
+}
+
+/* ── Colours of the day, so guests can match their aṣọ-ẹbí ──────────────── */
+.swatches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.1rem;
+  margin-top: 1.1rem;
+}
+.swatch { text-align: center; }
+.swatch i {
+  display: block;
+  width: 3.1rem;
+  height: 3.1rem;
+  border-radius: 50%;
+  border: 1px solid rgba(138, 107, 20, .45);
+  box-shadow: inset 0 .15rem .4rem rgba(0, 0, 0, .18);
+}
+.swatch span {
+  display: block;
+  margin-top: .4rem;
+  font-size: .58rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+/* ── Section headings on the emerald ground ─────────────────────────────── */
+.section { margin-top: 3.4rem; }
+.section__head { text-align: center; margin-bottom: 1.4rem; }
+.section__title {
+  font-family: var(--display);
+  font-size: 1.85rem;
+  color: var(--paper-100);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   GALLERY — slow crossfading slideshow
+   ═════════════════════════════════════════════════════════════════════════ */
+.gallery {
+  position: relative;
+  border: 1px solid rgba(201,162,39,.35);
+  padding: .5rem;
+  background: rgba(255,255,255,.02);
+}
+.gallery__stage {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: var(--em-800);
+  touch-action: pan-y;
+}
+@media (min-width: 40rem) { .gallery__stage { aspect-ratio: 3 / 2; } }
+
+.slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 1.5s ease, transform 9s linear;
+  transform: scale(1.06);
+  pointer-events: none;
+}
+.slide.is-active {
+  opacity: 1;
+  transform: scale(1);      /* a slow Ken Burns settle over the dwell */
+  pointer-events: auto;
+}
+.slide img, .slide video { width: 100%; height: 100%; object-fit: cover; }
+
+.slide__caption {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  padding: 2.6rem .95rem .8rem;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: .95rem;
+  color: var(--paper-100);
+  background: linear-gradient(to top, rgba(6,23,15,.86), transparent);
+}
+
+.gallery__arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 3;
+  width: 2.6rem;
+  height: 2.6rem;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--paper-100);
+  background: rgba(6,23,15,.42);
+  border: 1px solid rgba(233,210,148,.3);
+  backdrop-filter: blur(4px);
+}
+.gallery__arrow--prev { left: .55rem; }
+.gallery__arrow--next { right: .55rem; }
+
+.gallery__dots {
+  display: flex;
+  justify-content: center;
+  gap: .45rem;
+  padding: .7rem 0 .25rem;
+}
+.gallery__dots button {
+  width: .42rem; height: .42rem;
+  padding: 0;
+  border-radius: 50%;
+  background: rgba(233,210,148,.28);
+  transition: background .3s, transform .3s;
+}
+.gallery__dots button[aria-current="true"] {
+  background: var(--gold-400);
+  transform: scale(1.5);
+}
+
+.unmute {
+  position: absolute;
+  right: .6rem;
+  bottom: .6rem;
+  z-index: 4;
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  padding: .35rem .7rem;
+  border-radius: 1.4rem;
+  font-size: .64rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--paper-100);
+  background: rgba(6,23,15,.66);
+  border: 1px solid rgba(233,210,148,.34);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   THE BOOKLET — a paper program you turn by hand
+   ═════════════════════════════════════════════════════════════════════════ */
+.book {
+  position: relative;
+  perspective: 1800px;
+  perspective-origin: 50% 42%;
+  margin: 0 auto;
+  max-width: 26rem;
+}
+.book__stack {
+  position: relative;
+  min-height: 30rem;
+}
+/* the closed edge of the block of pages, on the binding side */
+.book__stack::before {
+  content: "";
+  position: absolute;
+  top: .35rem; bottom: -.35rem; left: .35rem; right: -.35rem;
+  background: var(--paper-400);
+  box-shadow: .28rem .28rem 0 rgba(214,196,158,.55), 0 1.2rem 2.6rem rgba(0,0,0,.5);
+}
+
+.leaf {
+  position: relative;
+  z-index: 1;
+  padding: 2.1rem 1.5rem 3.4rem;
+  min-height: 30rem;
+  color: var(--ink);
+  background:
+    linear-gradient(105deg, var(--paper-300) 0 .35rem, var(--paper-100) .35rem 100%),
+    var(--paper-100);
+  box-shadow: inset .55rem 0 .9rem -.55rem rgba(90,70,20,.35);
+}
+.leaf::before {
+  content: "";
+  position: absolute;
+  inset: .7rem .7rem .7rem 1.05rem;
+  border: 1px solid rgba(138,107,20,.42);
+  pointer-events: none;
+}
+.leaf::after {
+  content: "";
+  position: absolute;
+  inset: .92rem .92rem .92rem 1.27rem;
+  border-top: 1px solid rgba(138,107,20,.2);
+  border-bottom: 1px solid rgba(138,107,20,.2);
+  pointer-events: none;
+}
+
+.leaf__eyebrow {
+  font-size: .6rem;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--gold-700);
+  text-align: center;
+}
+.leaf__heading {
+  margin-top: .3rem;
+  font-family: var(--display);
+  font-size: 2.05rem;
+  line-height: 1.15;
+  text-align: center;
+  color: var(--em-700);
+}
+.leaf__sub {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 1rem;
+  text-align: center;
+  color: var(--olive-600);
+}
+
+.order { margin-top: 1.5rem; }
+.order li {
+  position: relative;
+  padding: .72rem 0 .72rem 0;
+  border-bottom: 1px solid rgba(138,107,20,.16);
+}
+.order li:last-child { border-bottom: 0; }
+.order__row { display: flex; gap: .75rem; align-items: baseline; }
+.order__time {
+  flex: 0 0 3.6rem;
+  font-family: var(--ui);
+  font-size: .68rem;
+  letter-spacing: .08em;
+  color: var(--gold-700);
+  padding-top: .18rem;
+}
+.order__title {
+  font-family: var(--display);
+  font-size: 1.24rem;
+  line-height: 1.25;
+  color: var(--em-700);
+}
+.order__by {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: .95rem;
+  color: var(--olive-600);
+}
+.order__note {
+  font-size: .72rem;
+  letter-spacing: .04em;
+  color: var(--ink-faint);
+}
+.order__prose {
+  margin-top: 1.6rem;
+  font-family: var(--display);
+  font-size: 1.12rem;
+  line-height: 1.8;
+  text-align: center;
+  color: var(--ink-soft);
+}
+
+/* "happening now" marker on timed items */
+.order li.is-now::before {
+  content: "";
+  position: absolute;
+  left: -1.05rem;
+  top: 1.05rem;
+  width: .38rem;
+  height: .38rem;
+  border-radius: 50%;
+  background: var(--gold-500);
+  box-shadow: 0 0 0 0 rgba(201,162,39,.6);
+  animation: pulse 2.4s infinite;
+}
+.order li.is-now .order__title { color: var(--em-500); }
+.now-tag {
+  display: inline-block;
+  margin-left: .5rem;
+  padding: .06rem .42rem;
+  border-radius: 1rem;
+  font-family: var(--ui);
+  font-size: .55rem;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--paper-100);
+  background: var(--em-600);
+  vertical-align: .18em;
+}
+@keyframes pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(201,162,39,.55) }
+  70%  { box-shadow: 0 0 0 .5rem rgba(201,162,39,0) }
+  100% { box-shadow: 0 0 0 0 rgba(201,162,39,0) }
+}
+
+/* page number, printed at the foot of each leaf */
+.leaf__folio {
+  position: absolute;
+  left: 0; right: 0;
+  bottom: 1.55rem;
+  text-align: center;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: .82rem;
+  color: var(--ink-faint);
+}
+
+/* the turning leaf */
+.flipper {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  transform-style: preserve-3d;
+  transform-origin: left center;
+  pointer-events: none;
+  will-change: transform;
+}
+.flipper .face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  overflow: hidden;
+}
+.flipper .face--back {
+  transform: rotateY(180deg);
+  background:
+    linear-gradient(255deg, var(--paper-300) 0 .35rem, var(--paper-100) .35rem 100%),
+    var(--paper-100);
+  box-shadow: inset -.55rem 0 .9rem -.55rem rgba(90,70,20,.35);
+}
+.flipper .face--back::before {
+  content: "";
+  position: absolute;
+  inset: .7rem 1.05rem .7rem .7rem;
+  border: 1px solid rgba(138,107,20,.16);
+}
+
+/* shadow the turning page casts on the leaf beneath it */
+.book__shade {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  opacity: 0;
+  pointer-events: none;
+  background: linear-gradient(to right, rgba(0,0,0,.35), transparent 62%);
+}
+
+/* ── Booklet controls ───────────────────────────────────────────────────── */
+.book__controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 1.35rem auto 0;
+  max-width: 26rem;
+}
+.turn {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  padding: .6rem 1.05rem;
+  border-radius: 2rem;
+  font-size: .66rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--gold-300);
+  border: 1px solid rgba(201,162,39,.42);
+  background: rgba(255,255,255,.03);
+  transition: background .25s, color .25s, opacity .25s;
+}
+.turn:hover:not(:disabled) { background: rgba(201,162,39,.14); color: var(--paper-100); }
+.turn:disabled { opacity: .25; cursor: default; }
+.turn svg { width: 14px; height: 14px; }
+
+.pips { display: flex; align-items: center; gap: .4rem; }
+.pips button {
+  width: .4rem; height: .4rem;
+  padding: 0;
+  border-radius: 50%;
+  background: rgba(233,210,148,.26);
+  transition: transform .3s var(--ease), background .3s;
+}
+.pips button[aria-current="true"] { background: var(--gold-400); transform: scale(1.6); }
+
+.folio-count {
+  text-align: center;
+  margin-top: .8rem;
+  font-size: .62rem;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: rgba(244,236,216,.4);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   DETAILS PAGE
+   ═════════════════════════════════════════════════════════════════════════ */
+.panel {
+  position: relative;
+  padding: 1.65rem 1.4rem;
+  margin-bottom: 1.15rem;
+  color: var(--ink);
+  background: linear-gradient(160deg, var(--paper-100), var(--paper-200));
+  box-shadow: 0 .7rem 1.6rem rgba(0,0,0,.35);
+}
+.panel::before {
+  content: "";
+  position: absolute;
+  inset: .45rem;
+  border: 1px solid rgba(138,107,20,.35);
+  pointer-events: none;
+}
+.panel__title {
+  font-family: var(--display);
+  font-size: 1.5rem;
+  color: var(--em-700);
+}
+.panel__body {
+  margin-top: .5rem;
+  font-size: .92rem;
+  line-height: 1.72;
+  color: var(--ink-soft);
+  white-space: pre-line;
+}
+.panel__link {
+  display: inline-block;
+  margin-top: .9rem;
+  padding: .55rem 1.1rem;
+  font-size: .66rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--paper-100);
+  background: var(--em-700);
+  border: 1px solid var(--gold-700);
+  transition: background .25s;
+}
+.panel__link:hover { background: var(--em-600); }
+
+.venue__meta {
+  margin-top: .35rem;
+  font-family: var(--display);
+  font-size: 1.02rem;
+  color: var(--ink-soft);
+}
+.venue__time {
+  margin-top: .3rem;
+  font-size: .68rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--gold-700);
+}
+
+.party__group { margin-top: 1.15rem; }
+.party__group h4 {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 1.08rem;
+  color: var(--olive-600);
+  margin-bottom: .35rem;
+}
+.party__group li {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: .34rem 0;
+  border-bottom: 1px dotted rgba(138,107,20,.3);
+  font-size: .9rem;
+}
+.party__group li span:first-child { font-family: var(--display); font-size: 1.06rem; color: var(--em-700); }
+.party__group li span:last-child { color: var(--ink-faint); font-size: .72rem; letter-spacing: .06em; text-align: right; }
+
+.faq__item { border-bottom: 1px solid rgba(138,107,20,.22); }
+.faq__item:last-child { border-bottom: 0; }
+.faq__q {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  padding: .95rem 0;
+  text-align: left;
+  font-family: var(--display);
+  font-size: 1.14rem;
+  color: var(--em-700);
+}
+.faq__q span { flex: 0 0 auto; color: var(--gold-700); transition: transform .3s var(--ease); }
+.faq__item.is-open .faq__q span { transform: rotate(45deg); }
+.faq__a {
+  display: none;
+  padding: 0 0 1rem;
+  font-size: .9rem;
+  line-height: 1.7;
+  color: var(--ink-soft);
+}
+.faq__item.is-open .faq__a { display: block; }
+
+/* ── Music button ───────────────────────────────────────────────────────── */
+.music-toggle {
+  position: fixed;
+  right: max(.85rem, env(safe-area-inset-right));
+  bottom: calc(var(--nav-h) + 1.1rem);
+  z-index: 55;
+  width: 2.9rem;
+  height: 2.9rem;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--gold-300);
+  background: rgba(9,34,23,.9);
+  border: 1px solid rgba(201,162,39,.42);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 .5rem 1.2rem rgba(0,0,0,.45);
+  transition: opacity .4s, transform .4s var(--ease);
+}
+.music-toggle[hidden] { display: none; }
+.music-toggle svg { width: 17px; height: 17px; }
+.music-toggle.is-muted { color: rgba(244,236,216,.4); }
+
+/* the little equaliser, alive only while sound is actually playing */
+.eq { display: flex; align-items: flex-end; gap: 2px; height: 14px; }
+.eq i {
+  width: 2px;
+  background: currentColor;
+  height: 40%;
+  animation: eq 1.1s ease-in-out infinite;
+}
+.eq i:nth-child(2) { animation-delay: .18s; height: 90% }
+.eq i:nth-child(3) { animation-delay: .36s; height: 60% }
+.eq i:nth-child(4) { animation-delay: .54s; height: 100% }
+.music-toggle.is-muted .eq i { animation-play-state: paused; height: 22%; }
+@keyframes eq { 0%,100% { transform: scaleY(.35) } 50% { transform: scaleY(1) } }
+
+/* ── Small print ────────────────────────────────────────────────────────── */
+.colophon {
+  margin-top: 3rem;
+  text-align: center;
+  font-size: .64rem;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: rgba(233,210,148,.42);
+}
+
+/* ── Desktop refinements ────────────────────────────────────────────────── */
+@media (min-width: 48rem) {
+  main { padding-top: 2.5rem; }
+  .card { padding: 4rem 3rem 3.4rem; }
+  .book__stack, .leaf { min-height: 34rem; }
+  .leaf { padding: 2.6rem 2.4rem 3.6rem; }
+}
+
+/* ── Motion preferences ─────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+  }
+  .slide { transform: none !important; }
+}
+
+/* ── Print: a guest may want a paper copy of a program ──────────────────── */
+@media print {
+  body { background: #fff; color: #000; }
+  body::before, body::after, .nav, .masthead, .music-toggle, .book__controls, .gate { display: none !important; }
+  .leaf { box-shadow: none; page-break-after: always; }
+  .flipper, .book__shade { display: none !important; }
+}

@@ -1,0 +1,15 @@
+# The original uncompressed track. The site uses its own compressed copy at
+# wedding/assets/audio/entrance.mp3, which IS committed. Keeping the 4.2 MB
+# master out of git keeps the repo light — it stays on your machine.
+/*.mp3
+
+# OS and editor noise
+.DS_Store
+Thumbs.db
+*.swp
+.vscode/
+.idea/
+
+# Vercel CLI
+.vercel/
+node_modules/
