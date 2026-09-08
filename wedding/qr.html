@@ -104,7 +104,8 @@
       <div>
         <div class="card-preview" id="cardBox"></div>
         <div class="btns">
-          <button type="button" data-dl="card">Download table card</button>
+          <button type="button" data-dl="cardpng">Card as PNG — to share</button>
+          <button type="button" data-dl="card">Card as SVG — to print</button>
         </div>
       </div>
     </div>
@@ -157,9 +158,9 @@
   function buildCard(url) {
     var W = 105, H = 148;
     var m = QR.matrix(url);
-    var side = 52;                       // QR size in mm
+    var side = 50;                       // QR size in mm
     var scale = side / m.size;
-    var x0 = (W - side) / 2, y0 = 62;
+    var x0 = (W - side) / 2, y0 = 70;    // sits below the "Scan for…" line
 
     var path = "";
     for (var r = 0; r < m.size; r++)
@@ -168,26 +169,40 @@
           path += "M" + (x0 + c * scale).toFixed(3) + " " + (y0 + r * scale).toFixed(3) +
                   "h" + scale.toFixed(3) + "v" + scale.toFixed(3) + "h-" + scale.toFixed(3) + "z";
 
-    var couple = WEDDING.couple.partnerA + "  &  " + WEDDING.couple.partnerB;
     var short = url.replace(/^https?:\/\//, "").replace(/\/$/, "");
+
+    /* Names go on their own lines, and shrink if they are long, so a name
+       like "Oluwatobiloba" can never run off the edge of the card. */
+    function fit(text, maxWidth, maxSize) {
+      var est = 0.53 * text.length;              // Georgia averages ~0.53em a glyph
+      return Math.min(maxSize, maxWidth / est).toFixed(2);
+    }
+    var nameW = W - 26;
+    var aSize = fit(WEDDING.couple.partnerA, nameW, 10);
+    var bSize = fit(WEDDING.couple.partnerB, nameW, 10);
+    var nameSize = Math.min(+aSize, +bSize);     // both names set at one size
 
     return '<svg xmlns="http://www.w3.org/2000/svg" width="' + W + 'mm" height="' + H + 'mm" ' +
       'viewBox="0 0 ' + W + " " + H + '">' +
       '<rect width="' + W + '" height="' + H + '" fill="' + PAPER + '"/>' +
       '<rect x="5" y="5" width="' + (W - 10) + '" height="' + (H - 10) + '" fill="none" stroke="' + GOLD + '" stroke-width=".5"/>' +
       '<rect x="6.6" y="6.6" width="' + (W - 13.2) + '" height="' + (H - 13.2) + '" fill="none" stroke="' + GOLD + '" stroke-width=".22"/>' +
-      '<text x="' + W / 2 + '" y="24" text-anchor="middle" font-family="Georgia, serif" ' +
-        'font-size="9" fill="' + INK + '">' + esc(couple) + "</text>" +
-      '<text x="' + W / 2 + '" y="33" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" ' +
+      '<text x="' + W / 2 + '" y="21" text-anchor="middle" font-family="Georgia, serif" ' +
+        'font-size="' + nameSize + '" fill="' + INK + '">' + esc(WEDDING.couple.partnerA) + "</text>" +
+      '<text x="' + W / 2 + '" y="30" text-anchor="middle" font-family="Georgia, serif" ' +
+        'font-style="italic" font-size="5.6" fill="' + GOLD + '">and</text>' +
+      '<text x="' + W / 2 + '" y="40" text-anchor="middle" font-family="Georgia, serif" ' +
+        'font-size="' + nameSize + '" fill="' + INK + '">' + esc(WEDDING.couple.partnerB) + "</text>" +
+      '<text x="' + W / 2 + '" y="49" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" ' +
         'font-size="3.4" letter-spacing="1.4" fill="' + GOLD + '">' + esc(WEDDING.event.dateShort) + "</text>" +
-      '<line x1="38" y1="41" x2="67" y2="41" stroke="' + GOLD + '" stroke-width=".3"/>' +
-      '<text x="' + W / 2 + '" y="52" text-anchor="middle" font-family="Georgia, serif" ' +
-        'font-style="italic" font-size="5.4" fill="' + INK + '">Scan for the programme</text>' +
+      '<line x1="40" y1="56" x2="65" y2="56" stroke="' + GOLD + '" stroke-width=".3"/>' +
+      '<text x="' + W / 2 + '" y="65" text-anchor="middle" font-family="Georgia, serif" ' +
+        'font-style="italic" font-size="5.2" fill="' + INK + '">Scan for the programme</text>' +
       '<path d="' + path + '" fill="' + INK + '"/>' +
-      '<text x="' + W / 2 + '" y="' + (y0 + side + 10) + '" text-anchor="middle" ' +
+      '<text x="' + W / 2 + '" y="' + (y0 + side + 9) + '" text-anchor="middle" ' +
         'font-family="Helvetica, Arial, sans-serif" font-size="3.1" letter-spacing=".6" fill="' + GOLD + '">' +
         esc(short) + "</text>" +
-      '<text x="' + W / 2 + '" y="' + (y0 + side + 17) + '" text-anchor="middle" ' +
+      '<text x="' + W / 2 + '" y="' + (y0 + side + 16) + '" text-anchor="middle" ' +
         'font-family="Georgia, serif" font-style="italic" font-size="3.6" fill="#5E6151">' +
         "order of service &#183; timings &#183; details</text>" +
       "</svg>";
@@ -243,11 +258,43 @@
     });
   }
 
+  /* The A6 card rasterised, so it can be sent straight to WhatsApp, posted to
+     a status, or emailed — none of which display an SVG. Roughly 300dpi. */
+  function downloadCardPng() {
+    var svgBlob = new Blob([current.card], { type: "image/svg+xml;charset=utf-8" });
+    var url = URL.createObjectURL(svgBlob);
+    var img = new Image();
+    img.onload = function () {
+      var W = 1240, H = 1748;                 // A6 at 300dpi
+      var cv = document.createElement("canvas");
+      cv.width = W; cv.height = H;
+      var ctx = cv.getContext("2d");
+      ctx.fillStyle = PAPER;
+      ctx.fillRect(0, 0, W, H);
+      ctx.drawImage(img, 0, 0, W, H);
+      URL.revokeObjectURL(url);
+      cv.toBlob(function (blob) {
+        if (!blob) { msg.textContent = "Could not build the PNG — use the SVG instead."; return; }
+        var a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "wedding-invitation-card.png";
+        document.body.appendChild(a); a.click(); a.remove();
+        setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
+      }, "image/png");
+    };
+    img.onerror = function () {
+      URL.revokeObjectURL(url);
+      msg.textContent = "Could not build the PNG — use the SVG instead.";
+    };
+    img.src = url;
+  }
+
   document.querySelector(".previews").addEventListener("click", function (e) {
     var b = e.target.closest("[data-dl]");
     if (!b || !current.url) return;
     if (b.dataset.dl === "svg") download("wedding-qr.svg", current.qr, "image/svg+xml");
     if (b.dataset.dl === "card") download("wedding-table-card-a6.svg", current.card, "image/svg+xml");
+    if (b.dataset.dl === "cardpng") downloadCardPng();
     if (b.dataset.dl === "png") downloadPng();
   });
 
