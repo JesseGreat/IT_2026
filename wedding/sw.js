@@ -1,14 +1,17 @@
 /* ============================================================================
-   sw.js — keeps the site working on venue wifi.
+   sw.js — keeps the site working on venue wifi, and picks up every deploy.
 
-   Everything the guest needs is cached on their first visit, so the programmes
-   still open when the signal drops mid-reception. Pages are served from the
-   cache immediately and refreshed in the background.
+   Pages, scripts and styles are fetched fresh from the network whenever there
+   is a connection, and only fall back to the cached copy when the signal is
+   weak or gone — so a push shows up on the next visit, and the programmes
+   still open mid-reception. Photos, audio and fonts, which rarely change and
+   are heavy, are served from the cache first.
 
-   Bump CACHE below whenever you change content, so returning guests pick the
-   new version up.
+   You never need to edit CACHE by hand: every Vercel build replaces __BUILD__
+   with the commit id (see vercel.json). That change is what tells returning
+   guests' browsers a new version exists, and site.js then refreshes the page.
    ========================================================================== */
-const CACHE = "wedding-v5";
+const CACHE = "wedding-__BUILD__";
 
 const SHELL = [
   "./",
@@ -29,11 +32,17 @@ const SHELL = [
   "./assets/img/favicon.svg",
 ];
 
+/* How long to wait for the network before settling for the cached copy. */
+const PATIENCE_MS = 3500;
+
 self.addEventListener("install", (event) => {
   event.waitUntil(
     caches.open(CACHE)
       // addAll fails wholesale if one file 404s, so add them individually.
-      .then((cache) => Promise.all(SHELL.map((url) => cache.add(url).catch(() => {}))))
+      // cache: "reload" skips the browser's HTTP cache, so a new version
+      // never gets filled with the previous deploy's files.
+      .then((cache) => Promise.all(SHELL.map((url) =>
+        cache.add(new Request(url, { cache: "reload" })).catch(() => {}))))
       .then(() => self.skipWaiting())
   );
 });
@@ -46,37 +55,67 @@ self.addEventListener("activate", (event) => {
   );
 });
 
+function store(req, res) {
+  const type = res.headers.get("content-type") || "";
+  if (type.startsWith("video/")) return;          // too big to keep on a phone
+  const copy = res.clone();
+  caches.open(CACHE).then((c) => c.put(req, copy)).catch(() => {});
+}
+
+/* Only a page request should fall back to a page. Handing index.html to a
+   failed image, audio or map request would be worse than failing. */
+function fromCache(req) {
+  return caches.match(req, { ignoreSearch: true }).then((hit) => {
+    if (hit) return hit;
+    if (req.mode === "navigate") return caches.match("./index.html");
+    return undefined;
+  });
+}
+
+function networkFirst(req) {
+  return new Promise((resolve) => {
+    let settled = false;
+    const finish = (res) => { if (!settled && res) { settled = true; resolve(res); } };
+
+    // Slow connection: show the cached copy rather than a blank screen.
+    const timer = setTimeout(() => fromCache(req).then(finish), PATIENCE_MS);
+
+    fetch(req)
+      .then((res) => {
+        clearTimeout(timer);
+        if (res && res.ok) store(req, res);
+        finish(res);
+      })
+      .catch(() => {
+        clearTimeout(timer);
+        fromCache(req).then((hit) => finish(hit || Response.error()));
+      });
+  });
+}
+
+function cacheFirst(req, sameOrigin) {
+  return caches.match(req).then((hit) => hit || fetch(req).then((res) => {
+    if (res && res.ok && (sameOrigin || res.type === "cors")) store(req, res);
+    return res;
+  }));
+}
+
 self.addEventListener("fetch", (event) => {
   const req = event.request;
   if (req.method !== "GET") return;
 
-  const url = new URL(req.url);
-  const sameOrigin = url.origin === location.origin;
-
   // Media can be large and is range-requested; let the browser handle it.
   if (req.headers.has("range")) return;
 
-  event.respondWith(
-    caches.match(req).then((hit) => {
-      const network = fetch(req)
-        .then((res) => {
-          if (res && res.ok && (sameOrigin || res.type === "basic" || res.type === "cors")) {
-            const copy = res.clone();
-            caches.open(CACHE).then((c) => c.put(req, copy)).catch(() => {});
-          }
-          return res;
-        })
-        .catch(() => {
-          // Only a page request should fall back to a page. Handing index.html
-          // to a failed image, audio or map request would be worse than failing.
-          if (sameOrigin && req.mode === "navigate") {
-            return caches.match("./index.html").then((page) => page || Response.error());
-          }
-          return Response.error();
-        });
+  const url = new URL(req.url);
+  if (!url.protocol.startsWith("http")) return;
+  const sameOrigin = url.origin === location.origin;
 
-      // Cache first for speed on a weak connection, refreshed in the background.
-      return hit || network;
-    })
+  const isCode = sameOrigin && (
+    req.mode === "navigate" ||
+    url.pathname === "/" ||
+    /\.(html|js|css|webmanifest|json)$/.test(url.pathname)
   );
+
+  event.respondWith(isCode ? networkFirst(req) : cacheFirst(req, sameOrigin));
 });

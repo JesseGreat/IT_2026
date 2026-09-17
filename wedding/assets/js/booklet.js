@@ -8,7 +8,7 @@
 (function () {
   "use strict";
 
-  const { esc, prettyTime } = window.Site;
+  const { esc, prettyTime, onLeave } = window.Site;
   const TURN_MS = 760;
 
   const FLEURON =
@@ -262,10 +262,11 @@
     }, { passive: true });
 
     /* Keyboard, for the desktop view. */
-    document.addEventListener("keydown", (e) => {
+    const onKey = (e) => {
       if (e.key === "ArrowRight") next();
       if (e.key === "ArrowLeft") prev();
-    });
+    };
+    document.addEventListener("keydown", onKey);
 
     /* Open straight to whatever is happening right now. */
     if (now) index = now.pageIndex;
@@ -274,11 +275,16 @@
     paint();
 
     /* Keep the "now" marker honest while a guest leaves the page open. */
-    setInterval(() => {
+    const clock = setInterval(() => {
       const fresh = findNow(book);
       const changed = JSON.stringify(fresh) !== JSON.stringify(now);
       if (changed) { now = fresh; if (!busy) setLeaf(index); }
     }, 60000);
+
+    onLeave(() => {
+      document.removeEventListener("keydown", onKey);
+      clearInterval(clock);
+    });
   }
 
   window.Booklet = { mount };

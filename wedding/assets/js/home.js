@@ -6,7 +6,7 @@
   "use strict";
 
   const W = window.WEDDING;
-  const { $, esc, prettyTime, Music } = window.Site;
+  const { $, esc, prettyTime, Music, page, onLeave } = window.Site;
 
   const FLEURON =
     '<svg class="fleuron fleuron--paper" width="88" height="12" viewBox="0 0 88 12" ' +
@@ -125,7 +125,8 @@
         cell(secs, "seconds");
     }
     tick();
-    setInterval(tick, 1000);
+    const timer = setInterval(tick, 1000);
+    onLeave(() => clearInterval(timer));
   }
 
   /* ── the month, with the day ringed ───────────────────────────────────── */
@@ -268,6 +269,10 @@
     const envelope = $("#envelope");
     $("#seal").textContent = W.couple.monogram;
 
+    const tag = $("#gateTag");
+    if (W.couple.hashtag) tag.textContent = W.couple.hashtag;
+    else tag.remove();
+
     // Already opened it this visit? Don't make them do it again.
     if (Music.entered) {
       gate.remove();
@@ -298,7 +303,7 @@
   }
 
   /* ── boot ─────────────────────────────────────────────────────────────── */
-  document.addEventListener("DOMContentLoaded", () => {
+  page(() => {
     renderInvitation();
     renderVenue();
     renderParents();

@@ -35,7 +35,7 @@
 <script src="assets/js/booklet.js"></script>
 <script src="assets/js/comingsoon.js"></script>
 <script>
-  document.addEventListener("DOMContentLoaded", function () {
+  Site.page(function () {
     if (ComingSoon.mount("reception")) return;
     var book = WEDDING.reception;
     document.querySelector("[data-title]").textContent = book.title;

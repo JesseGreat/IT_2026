@@ -278,7 +278,8 @@ const WEDDING = {
   /* ── 7. GALLERY ─────────────────────────────────────────────────────────
      Drop your files in  assets/img/  and list them here, in order.
      Photo:  { type: "photo", src: "assets/img/us-01.jpg", caption: "..." }
-     Video:  { type: "video", src: "assets/img/clip.mp4",  poster: "assets/img/clip.jpg", caption: "..." }
+     Video:  { type: "video", src: "assets/video/clip.mp4", poster: "assets/video/clip.jpg", caption: "..." }
+             add  sound: false  to keep a clip silent (hides its "Tap for sound" button)
      Compress photos to ~1600px wide / under 300 KB each — see README.
      ───────────────────────────────────────────────────────────────────── */
   gallery: {
@@ -292,7 +293,13 @@ const WEDDING = {
          { type: "photo", src: "assets/img/us-01.jpg", caption: "Yábà, 2019" },
          { type: "video", src: "assets/img/clip.mp4", poster: "assets/img/clip.jpg" },
     */
-    slides: [],
+    slides: [
+      /* sound: false keeps every clip silent under the entrance music. */
+      { type: "video", src: "assets/video/clip-01.mp4", poster: "assets/video/clip-01.jpg", sound: false },
+      { type: "video", src: "assets/video/clip-02.mp4", poster: "assets/video/clip-02.jpg", sound: false },
+      { type: "video", src: "assets/video/clip-03.mp4", poster: "assets/video/clip-03.jpg", sound: false },
+      { type: "video", src: "assets/video/clip-04.mp4", poster: "assets/video/clip-04.jpg", sound: false },
+    ],
 
     /* Shown while `slides` is empty. */
     placeholder: {

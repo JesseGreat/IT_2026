@@ -13,7 +13,8 @@ compression is worth keeping.
   sound, so the tap *is* the permission — which is why the entrance is built
   around it rather than apologising for it.
 - The track fades in over ~1.8 seconds rather than starting abruptly.
-- It loops, and continues across pages, picking up roughly where it left off.
+- It loops, and carries on uninterrupted when a guest switches tabs — only the
+  round music button stops it.
 - The round control above the nav bar mutes and unmutes it at any time.
 - If a guest unmutes a video in the gallery, the music steps aside and comes
   back when the video is muted again.

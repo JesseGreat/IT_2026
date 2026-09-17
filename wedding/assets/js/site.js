@@ -27,11 +27,12 @@
   /* Which page are we on? Tolerant of hosts that serve "/church" instead of
      "/church.html", so the nav still highlights correctly either way. */
   const stem = (path) => String(path).split("/").pop().replace(/\.html$/, "") || "index";
-  const currentPage = (() => {
-    const here = stem(location.pathname);
+  function pageFor(path) {
+    const here = stem(path);
     const match = (window.WEDDING.nav || []).find((n) => stem(n.href) === here);
     return match ? match.href : "index.html";
-  })();
+  }
+  let currentPage = pageFor(location.pathname);
 
   /* ── navigation icons ─────────────────────────────────────────────────── */
   const ICONS = {
@@ -57,7 +58,7 @@
   }
 
   /* ── masthead + bottom nav ────────────────────────────────────────────── */
-  function buildChrome() {
+  function fillMasthead() {
     const head = $("[data-masthead]");
     if (head) {
       head.className = "masthead";
@@ -65,9 +66,21 @@
         '<span class="masthead__mono">' + esc(W.couple.monogram) + "</span>" +
         '<span class="masthead__date">' + esc(W.event.dateShort) + "</span>";
     }
+  }
+
+  function markCurrentTab() {
+    $$(".nav a").forEach((a) => {
+      if (a.getAttribute("href") === currentPage) a.setAttribute("aria-current", "page");
+      else a.removeAttribute("aria-current");
+    });
+  }
+
+  function buildChrome() {
+    fillMasthead();
 
     const nav = document.createElement("nav");
     nav.className = "nav";
+    nav.setAttribute("data-persist", "");   // survives moving between tabs
     nav.setAttribute("aria-label", "Wedding programme");
     nav.innerHTML = W.nav
       .map((item) => {
@@ -88,12 +101,17 @@
      The envelope tap on the invitation is that interaction; from then on we
      carry the music across pages using sessionStorage, and fall back to a
      tap-to-resume button whenever the browser declines.
+
+     Moving between tabs swaps the page content in place (see NAVIGATION
+     below) rather than loading a new page, so the same audio element keeps
+     playing uninterrupted. Only the music button stops it.
      ════════════════════════════════════════════════════════════════════ */
   const Music = (function () {
     const cfg = W.music || {};
     let audio = null;
     let toggle = null;
     let ducked = false;      // temporarily silenced (e.g. a gallery video is unmuted)
+    let needsSeek = false;   // fresh element on a full page load: resume the saved spot
 
     const store = {
       get on()  { try { return sessionStorage.getItem("wed:music") !== "off"; } catch (e) { return true; } },
@@ -140,6 +158,7 @@
     function ensureAudio() {
       if (audio || !cfg.file) return audio;
       audio = new Audio(cfg.file);
+      needsSeek = true;
       audio.loop = true;
       audio.preload = "auto";
       audio.addEventListener("error", () => {
@@ -198,9 +217,17 @@
     function play(fromSaved) {
       const a = ensureAudio();
       if (!a) return Promise.resolve(false);
-      if (fromSaved && store.at) {
-        try { a.currentTime = store.at; } catch (e) {}
+      // Only a brand-new element needs moving to the saved spot. Seeking a
+      // paused element that already knows where it is would jump backwards.
+      if (fromSaved && needsSeek && store.at) {
+        const at = store.at;
+        const seek = () => { try { a.currentTime = at; } catch (e) {} };
+        // Seeking before the metadata arrives is ignored by some browsers,
+        // which is what made the song restart from the top.
+        if (a.readyState >= 1) seek();
+        else a.addEventListener("loadedmetadata", seek, { once: true });
       }
+      needsSeek = false;
       // A context created outside a gesture starts suspended; this is the
       // gesture, so wake it before asking for sound.
       if (ctx && ctx.state === "suspended") { try { ctx.resume(); } catch (e) {} }
@@ -241,6 +268,7 @@
 
       toggle = document.createElement("button");
       toggle.className = "music-toggle";
+      toggle.setAttribute("data-persist", "");
       toggle.type = "button";
       toggle.hidden = true;
       toggle.innerHTML = '<span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span>';
@@ -254,6 +282,7 @@
       const remember = () => { if (audio && !audio.paused) store.at = audio.currentTime; };
       window.addEventListener("pagehide", remember);
       document.addEventListener("visibilitychange", () => { if (document.hidden) remember(); });
+      setInterval(remember, 2000);   // a phone may kill the tab without pagehide
 
       // Arriving on a page other than the entrance, having already entered:
       // try to keep playing. If the browser blocks it, the button is waiting.
@@ -264,15 +293,168 @@
       }
     }
 
-    return { mount, startFromGate, duck, paint, get entered() { return store.entered; } };
+    return {
+      mount, startFromGate, duck, paint,
+      get entered() { return store.entered; },
+      get playing() { return !!(audio && !audio.paused); },
+    };
   })();
 
-  /* ── offline support ──────────────────────────────────────────────────── */
+  /* ── page lifecycle ───────────────────────────────────────────────────
+     Page scripts set themselves up through Site.page(fn) instead of
+     DOMContentLoaded, so the same setup can run again when a guest comes
+     back to that tab without a reload. Anything that would outlive the page
+     (timers, document-level listeners) is undone through Site.onLeave(fn).
+     ──────────────────────────────────────────────────────────────────── */
+  const inits = {};      // script URL → its setup, for scripts already loaded
+  let leaving = [];
+
+  function page(fn) {
+    const s = document.currentScript;
+    if (s && s.src) inits[s.src] = fn;
+    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", fn);
+    else fn();
+  }
+
+  function onLeave(fn) { leaving.push(fn); }
+
+  /* ══ NAVIGATION ════════════════════════════════════════════════════════
+     A tap on a tab fetches that page and swaps it in, keeping the nav bar,
+     the music button and — most importantly — the playing audio. Anything
+     unexpected (offline with nothing cached, an error) falls back to an
+     ordinary page load, so the worst case is the old behaviour.
+     ════════════════════════════════════════════════════════════════════ */
+  const Nav = (function () {
+    const pages = new Set((W.nav || []).map((n) => stem(n.href)));
+    let seq = 0;
+    let stale = false;   // a new version is live; the next tap loads it properly
+
+    function runSafely(fn) { try { fn(); } catch (e) { console.error(e); } }
+
+    function loadScript(src) {
+      return new Promise((resolve) => {
+        const el = document.createElement("script");
+        el.src = src;
+        el.onload = el.onerror = () => resolve();
+        document.body.appendChild(el);
+      });
+    }
+
+    async function go(url, push) {
+      if (stale || !window.fetch || !window.DOMParser) { location.href = url; return; }
+      const token = ++seq;
+
+      let doc;
+      try {
+        const res = await fetch(url, { credentials: "same-origin" });
+        if (!res.ok) throw new Error(res.status);
+        doc = new DOMParser().parseFromString(await res.text(), "text/html");
+      } catch (e) {
+        location.href = url;
+        return;
+      }
+      if (token !== seq) return;          // a later tap overtook this one
+
+      leaving.splice(0).forEach(runSafely);
+
+      if (push) history.pushState({ soft: true }, "", url);
+      currentPage = pageFor(new URL(url, location.href).pathname);
+
+      // Swap everything except the persistent chrome and the loaded scripts.
+      Array.from(document.body.children).forEach((el) => {
+        if (el.tagName !== "SCRIPT" && !el.hasAttribute("data-persist")) el.remove();
+      });
+      const anchor = document.body.firstChild;
+      Array.from(doc.body.children).forEach((el) => {
+        if (el.tagName !== "SCRIPT") document.body.insertBefore(document.importNode(el, true), anchor);
+      });
+
+      document.title = doc.title.replace("{{names}}", W.couple.partnerA + " & " + W.couple.partnerB);
+      const desc = doc.querySelector('meta[name="description"]');
+      const here = $('meta[name="description"]');
+      if (desc && here) here.setAttribute("content", desc.getAttribute("content"));
+
+      fillMasthead();
+      markCurrentTab();
+      window.scrollTo(0, 0);
+
+      // Run the new page's scripts in order: re-run the setup of ones we
+      // already have, load the ones we don't, and execute inline blocks.
+      for (const s of Array.from(doc.querySelectorAll("body script"))) {
+        if (s.getAttribute("src")) {
+          const src = new URL(s.getAttribute("src"), url).href;
+          if (Array.from(document.scripts).some((x) => x.src === src)) {
+            if (inits[src]) runSafely(inits[src]);
+          } else {
+            await loadScript(src);
+          }
+        } else {
+          const el = document.createElement("script");
+          el.textContent = s.textContent;
+          document.body.appendChild(el);    // runs immediately
+          el.remove();
+        }
+      }
+    }
+
+    function mount() {
+      if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+
+      document.addEventListener("click", (e) => {
+        if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+        const a = e.target.closest && e.target.closest("a[href]");
+        if (!a || (a.target && a.target !== "_self") || a.hasAttribute("download")) return;
+        const url = new URL(a.href, location.href);
+        if (url.origin !== location.origin || !pages.has(stem(url.pathname))) return;
+        if (stem(url.pathname) === stem(location.pathname)) {
+          if (url.hash) return;             // an in-page anchor
+          e.preventDefault();
+          window.scrollTo({ top: 0, behavior: "smooth" });
+          return;
+        }
+        e.preventDefault();
+        go(url.href, true);
+      });
+
+      window.addEventListener("popstate", () => {
+        if (pageFor(location.pathname) !== currentPage) go(location.href, false);
+      });
+    }
+
+    /* A new deploy has taken over. Refresh straight away — unless the music
+       is playing, in which case wait for the next tab tap, so the song isn't
+       cut off mid-verse. */
+    function newVersion() {
+      if (Music.playing) stale = true;
+      else location.reload();
+    }
+
+    return { mount, newVersion };
+  })();
+
+  /* ── offline support + picking up new deploys ─────────────────────────
+     Every deploy stamps sw.js with a fresh build id (see vercel.json), so
+     the browser sees a new service worker, installs it, and hands it
+     control. That handover is our cue to refresh. */
   function registerServiceWorker() {
     if (!("serviceWorker" in navigator)) return;
     if (location.protocol === "file:") return;      // only works over http(s)
+
+    // The very first install also hands over control; that one isn't news.
+    let hadController = !!navigator.serviceWorker.controller;
+    navigator.serviceWorker.addEventListener("controllerchange", () => {
+      if (hadController) Nav.newVersion();
+      hadController = true;
+    });
+
     window.addEventListener("load", () => {
-      navigator.serviceWorker.register("sw.js").catch(() => {});
+      navigator.serviceWorker.register("sw.js").then((reg) => {
+        // Tabs no longer reload, so ask for updates ourselves: whenever the
+        // guest comes back to the site, and every few minutes while it's open.
+        const check = () => reg.update().catch(() => {});
+        document.addEventListener("visibilitychange", () => { if (!document.hidden) check(); });
+        setInterval(check, 5 * 60 * 1000);
+      }).catch(() => {});
     });
   }
 
@@ -281,9 +463,13 @@
     document.title = document.title.replace("{{names}}", W.couple.partnerA + " & " + W.couple.partnerB);
     buildChrome();
     Music.mount();
+    Nav.mount();
     registerServiceWorker();
   });
 
   /* Shared toolkit for the page scripts. */
-  window.Site = { $, $$, esc, prettyTime, Music, currentPage };
+  window.Site = {
+    $, $$, esc, prettyTime, Music, page, onLeave,
+    get currentPage() { return currentPage; },
+  };
 })();

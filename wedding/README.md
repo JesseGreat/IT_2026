@@ -78,8 +78,8 @@ comingSoon: {
 }
 ```
 
-That is the whole change. Bump `CACHE` in `sw.js` afterwards so returning
-guests get it. The wording (`headline`, `note`, `year`, `initials`) lives in
+That is the whole change — push it and returning guests get it automatically.
+The wording (`headline`, `note`, `year`, `initials`) lives in
 the same block.
 
 ---
@@ -108,8 +108,8 @@ A few things worth knowing:
   the `src="..."` URL into `venue.mapEmbed` — that overrides the search. The map
   needs the network, so it is left out entirely when a guest is offline; the
   address and both buttons still work.
-- **After editing**, bump `CACHE` in `sw.js` (`wedding-v5` → `wedding-v6`) so
-  guests who already visited get the new version instead of the cached old one.
+- **After editing**, just push. Every deploy stamps `sw.js` with the commit id,
+  so guests who already visited pick up the new version by themselves.
 
 ---
 
@@ -210,7 +210,9 @@ git push -u origin main
 ```
 
 Then import the repo at [vercel.com/new](https://vercel.com/new). Framework
-preset: **Other**. No build command, no output directory — it's static.
+preset: **Other**. Leave the build settings alone — `vercel.json` supplies a
+one-line build command that stamps `sw.js` with the commit id, which is how
+guests' browsers learn a new version is live.
 
 Every `git push` redeploys in about fifteen seconds. This matters more than you
 think: someone's name will be spelled wrong, and you'll want to fix it the night
@@ -271,7 +273,13 @@ damaged — enough to survive a creased or slightly stained card.
 
 A service worker caches every page, the stylesheet and the scripts on a guest's
 first visit, so the programmes still open when the signal drops mid-reception.
-Pages load from the cache instantly and refresh in the background.
+With a connection, pages, scripts and styles always come fresh from the network;
+the cached copy is used only when the signal is gone or too slow (3.5 s).
+Photos, fonts and the music load from the cache first.
+
+When you push, a guest with the site open is refreshed onto the new version
+within a few minutes — or, if the music is playing, on their next tab tap, so
+the song isn't cut off.
 
 Two caveats worth knowing:
 
@@ -306,8 +314,9 @@ Two caveats worth knowing:
 page — that's why the envelope tap exists. If it still doesn't play, check the
 file is really at `assets/audio/entrance.mp3` and is an MP3.
 
-**Changes don't show up.** The service worker is serving the cached version. Bump
-`CACHE` in `sw.js`, or hard-reload (`Ctrl/Cmd + Shift + R`).
+**Changes don't show up.** Check the Vercel build log shows the `sed` build
+command ran. On your own device, closing and reopening the tab is enough; a
+hard-reload (`Ctrl/Cmd + Shift + R`) always works.
 
 **A page is blank.** Open the browser console. It's almost always a typo in
 `data.js` — a missing comma or an unclosed quote. The file is plain JavaScript, so
