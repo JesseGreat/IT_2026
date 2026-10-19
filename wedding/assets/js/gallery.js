@@ -41,6 +41,8 @@
     }
     return (
       '<div class="slide" data-i="' + i + '">' +
+        '<img class="slide__backdrop" src="' + esc(slide.src) + '" alt="" aria-hidden="true" ' +
+        (i === 0 ? 'fetchpriority="high"' : 'loading="lazy"') + ">" +
         '<img src="' + esc(slide.src) + '" alt="' + esc(slide.caption || "") + '" ' +
         (i === 0 ? 'fetchpriority="high"' : 'loading="lazy"') + ">" +
         caption +

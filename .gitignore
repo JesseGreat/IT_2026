@@ -13,3 +13,7 @@ Thumbs.db
 # Vercel CLI
 .vercel/
 node_modules/
+
+# The full-size photographs. The site uses its own web-sized copies in
+# wedding/assets/img/ — these stay on your machine.
+/photos-original/

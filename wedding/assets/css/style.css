@@ -757,12 +757,16 @@ main { padding: 1.5rem 1.15rem calc(var(--nav-h) + 3.4rem); }
 }
 .gallery__stage {
   position: relative;
-  aspect-ratio: 4 / 5;
+  aspect-ratio: 2 / 3;      /* a standing portrait, like a framed picture */
   overflow: hidden;
   background: var(--em-800);
   touch-action: pan-y;
 }
-@media (min-width: 40rem) { .gallery__stage { aspect-ratio: 3 / 2; } }
+/* On a wide screen the frame stays portrait and sits in the middle rather
+   than stretching into a letterbox that would crop everyone's feet off. */
+@media (min-width: 40rem) {
+  .gallery { max-width: 27rem; margin-inline: auto; }
+}
 
 .slide {
   position: absolute;
@@ -777,11 +781,14 @@ main { padding: 1.5rem 1.15rem calc(var(--nav-h) + 3.4rem); }
   transform: scale(1);      /* a slow Ken Burns settle over the dwell */
   pointer-events: auto;
 }
-.slide img, .slide video { width: 100%; height: 100%; object-fit: cover; }
-
-/* Videos are shown whole: portrait phone clips would lose most of the frame
-   to a crop, so they sit over a soft, blurred copy of their own poster. */
-.slide--video video { position: relative; object-fit: contain; }
+/* Every picture is shown whole, over a soft, blurred copy of itself, so a
+   portrait is never cropped to fill a frame of a different shape. */
+.slide img, .slide video {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
 .slide .slide__backdrop {
   position: absolute;
   inset: -8%;

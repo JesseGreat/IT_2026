@@ -294,11 +294,12 @@ const WEDDING = {
          { type: "video", src: "assets/img/clip.mp4", poster: "assets/img/clip.jpg" },
     */
     slides: [
-      /* sound: false keeps every clip silent under the entrance music. */
-      { type: "video", src: "assets/video/clip-01.mp4", poster: "assets/video/clip-01.jpg", sound: false },
-      { type: "video", src: "assets/video/clip-02.mp4", poster: "assets/video/clip-02.jpg", sound: false },
-      { type: "video", src: "assets/video/clip-03.mp4", poster: "assets/video/clip-03.jpg", sound: false },
-      { type: "video", src: "assets/video/clip-04.mp4", poster: "assets/video/clip-04.jpg", sound: false },
+      { type: "photo", src: "assets/img/photo-01.jpg" },
+      { type: "photo", src: "assets/img/photo-02.jpg" },
+      { type: "photo", src: "assets/img/photo-03.jpg" },
+      { type: "photo", src: "assets/img/photo-04.jpg" },
+      { type: "photo", src: "assets/img/photo-05.jpg" },
+      { type: "photo", src: "assets/img/photo-06.jpg" },
     ],
 
     /* Shown while `slides` is empty. */

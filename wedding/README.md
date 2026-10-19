@@ -115,45 +115,55 @@ A few things worth knowing:
 
 ## The photographs
 
-There are none yet, and the site does not pretend otherwise. While
-`gallery.slides` is empty it shows a **crest** instead — an olive laurel drawn
-around your monogram, with *"Photographs to follow"* beneath it. It is a
-designed panel, not a placeholder box, so the site looks finished today.
+Six pre-wedding portraits live in `assets/img/` as `photo-01.jpg` to
+`photo-06.jpg`, and the slideshow on the invitation page runs through them.
+Each one is shown **whole**, never cropped: the frame is portrait-shaped, and
+any picture that doesn't match it sits over a soft, blurred copy of itself.
 
-**The moment you add a photo, the slideshow takes that section back over.**
-Nothing else needs changing:
+The order, and any captions, live in `gallery.slides` in `data.js`:
 
 ```js
 gallery: {
   slides: [
-    { type: "photo", src: "assets/img/us-01.jpg", caption: "Yábà, 2019" },
-    { type: "photo", src: "assets/img/us-02.jpg", caption: "" },
+    { type: "photo", src: "assets/img/photo-01.jpg", caption: "Yábà, 2019" },
+    { type: "photo", src: "assets/img/photo-02.jpg" },
   ],
 }
 ```
 
-Put the files in `assets/img/` and **compress them first** — guests load these
-on venue wifi, often on one bar of signal. Full-resolution camera files simply
-will not appear.
+Empty the list and the section falls back to a **crest** — an olive laurel
+drawn around your monogram, with *"Photographs to follow"* beneath it.
 
-- Target **1600 px on the long edge**, **under 300 KB** each.
+**Adding more.** Put the files in `assets/img/` and **compress them first** —
+guests load these on venue wifi, often on one bar of signal. Full-resolution
+camera files simply will not appear.
+
+- Target **1800 px on the long edge**, **under 300 KB** each. The six here are
+  1200 x 1800 and 130-280 KB, about 1.2 MB in total.
 - Six to ten photos is plenty. A slideshow nobody reaches the end of is wasted.
 
 ```bash
-# one file
-ffmpeg -i big.jpg -vf "scale=1600:-1" -q:v 4 assets/img/us-01.jpg
+# the whole folder, with ImageMagick
+mogrify -path assets/img -resize 1800x1800\> -quality 82 *.jpg
 
-# or the whole folder, with ImageMagick
-mogrify -path assets/img -resize 1600x1600\> -quality 82 *.jpg
+# or with Python, which is already on this machine
+python3 -c "from PIL import Image, ImageOps; import sys
+im = ImageOps.exif_transpose(Image.open(sys.argv[1])).convert('RGB')
+im.thumbnail((1800, 1800)); im.save(sys.argv[2], quality=82, optimize=True, progressive=True)" big.jpg assets/img/photo-07.jpg
 ```
 
-For a video: keep it **under 20 seconds and under 5 MB**, add a `poster` image so
-something shows before it loads, and remember it plays **muted** by default —
-there's a tap-to-unmute button, and unmuting it pauses the background music.
+Keep the full-size originals out of the repository — ours are in
+`photos-original/`, which `.gitignore` excludes.
 
-```bash
-ffmpeg -i clip.mov -vf "scale=1280:-2" -c:v libx264 -crf 28 -an assets/img/clip.mp4
+**Videos** work too, in the same list, and are shown the same way:
+
+```js
+{ type: "video", src: "assets/video/clip.mp4", poster: "assets/video/clip.jpg", sound: false }
 ```
+
+A clip holds the frame until it finishes rather than for the usual seven
+seconds, plays **muted**, and `sound: false` hides its tap-to-unmute button so
+the entrance music is never interrupted. Keep clips under about 5 MB.
 
 You can also put a verse in the crest while you wait — set `verse` and
 `reference` in `gallery.placeholder`.
