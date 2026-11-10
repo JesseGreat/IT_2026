@@ -234,6 +234,22 @@
     $("#thanksBody").textContent = t.body;
   }
 
+  /* ── the gift note, beneath the note of thanks ────────────────────────── */
+  function renderGifts() {
+    const g = W.gifts;
+    const box = $("#gifts");
+    if (!g) { box.remove(); return; }
+    box.innerHTML =
+      '<svg class="gifts__heart" viewBox="0 0 24 22" aria-hidden="true">' +
+        '<path d="M12 20.5C5 15.6 1.5 11.9 1.5 7.6A5 5 0 0 1 12 5a5 5 0 0 1 10.5 2.6c0 4.3-3.5 8-10.5 12.9Z"/></svg>' +
+      '<p class="gifts__note">' + esc(g.note) + "</p>" +
+      '<div class="gifts__account">' +
+        '<span class="gifts__name">' + esc(g.name) + "</span>" +
+        '<span class="gifts__number">' + esc(g.account) + "</span>" +
+        '<span class="gifts__bank">' + esc(g.bank) + "</span>" +
+      "</div>";
+  }
+
 
   /* ── the crest, shown until the photographs arrive ────────────────────────
      An olive laurel — the third colour of the day — drawn around the
@@ -310,6 +326,7 @@
     renderCountdown();
     renderCalendar();
     renderThanksgiving();
+    renderGifts();
     setupGate();
 
     const g = W.gallery;

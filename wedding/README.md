@@ -14,11 +14,11 @@ that barely works.
 
 | Page | What it does |
 |---|---|
-| `index.html` | The invitation. A sealed envelope you tap to open — that tap starts the music and triggers the reveal. Then the venue with a live map, both families, a ticking countdown, the month with the day ringed and an *add to my calendar* button, the slideshow, and the note of thanks. |
+| `index.html` | The invitation. A sealed envelope you tap to open — that tap starts the music and triggers the reveal. Then the venue with a live map, both families, a ticking countdown, the month with the day ringed and an *add to my calendar* button, the slideshow, the note of thanks, and the gift note with the account details. |
 | `church.html` | The order of service, as a booklet you turn page by page. *Currently showing Coming Soon.* |
 | `traditional.html` | The Yoruba engagement programme, same booklet treatment. *Currently showing Coming Soon.* |
 | `reception.html` | The reception timeline; on the day it opens to whatever is happening now. *Currently showing Coming Soon.* |
-| `details.html` | Venue and map, order of the day, colours as swatches, travel, wedding party, FAQ. *Currently showing Coming Soon.* |
+| `details.html` | Venue and map, order of the day, colours as swatches, travel, wedding party, FAQ. |
 | `qr.html` | A private tool for you: type your live URL, get a QR code and a printable A6 table card. Not linked from the guest navigation. |
 
 ---
@@ -61,7 +61,7 @@ on a Mac) and visit `http://THAT-IP:8000` from a phone on the same wifi.
 
 ## Coming soon, and switching pages on
 
-Only the **invitation** is live. Church, Traditional, Reception and Details all
+The **invitation** and **Details** are live. Church, Traditional and Reception
 show a holding design — a laurel heart, `O │ O`, `2026`, *Coming Soon*.
 
 **None of the real content was deleted.** Every programme is still in
@@ -74,7 +74,7 @@ comingSoon: {
   church:      false,   // ← the order of service is now live
   traditional: true,
   reception:   true,
-  details:     true,
+  details:     false,
 }
 ```
 
@@ -100,6 +100,8 @@ A few things worth knowing:
   screen without scrolling, which is the whole point of the booklet.
 - **Times.** Write them as `"16:05"` (24-hour). They display as `4:05 pm`, and
   they're what drives the "happening now" marker on the day.
+- **The gift note** under "Thanking God" lives in the `gifts` block —
+  the wording, the account name, number and bank. Set `gifts: null` to hide it.
 - **Optional sections.** Set any block in `details` to `null` to remove it —
   `registry: null` and the registry panel disappears.
 - **The map.** The venue section embeds a live Google map that searches for

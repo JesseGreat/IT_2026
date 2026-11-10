@@ -87,7 +87,7 @@ const WEDDING = {
     church:      true,
     traditional: true,
     reception:   true,
-    details:     true,
+    details:     false,
 
     initials: ["O", "O"],          // shown as  O │ O
     year:     "2026",
@@ -317,6 +317,17 @@ const WEDDING = {
   thanksgiving: {
     title: "Thanking God",
     body:  "God has granted us the privilege of meeting and loving each other, and today, with His blessing and that of our parents, we wish to unite our lives forever.",
+  },
+
+  /* ── 8b. GIFTS ──────────────────────────────────────────────────────────
+     A small note beneath "Thanking God" on the invitation page.
+     Set to null to remove it.
+     ───────────────────────────────────────────────────────────────────── */
+  gifts: {
+    note:    "With love, we kindly request that\nall gifts be monetary.",
+    name:    "Adebisi Bukola Ifedolapo",
+    account: "0130059467",
+    bank:    "GTBank",
   },
 
   /* ── 9. MUSIC ───────────────────────────────────────────────────────────
