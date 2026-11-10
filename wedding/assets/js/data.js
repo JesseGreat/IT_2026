@@ -63,7 +63,7 @@ const WEDDING = {
      ───────────────────────────────────────────────────────────────────── */
   schedule: [
     { label: "Church Service",         time: "08:00", href: "church.html" },
-    { label: "Traditional Engagement", time: "11:00", href: "traditional.html" },
+    { label: "Traditional Engagement", time: "10:00", href: "traditional.html" },
     { label: "Reception",              time: "14:00", href: "reception.html" },
   ],
 
@@ -86,7 +86,7 @@ const WEDDING = {
   comingSoon: {
     church:      true,
     traditional: true,
-    reception:   true,
+    reception:   false,
     details:     false,
 
     initials: ["O", "O"],          // shown as  O │ O
@@ -167,7 +167,7 @@ const WEDDING = {
 
   traditional: {
     title:    "Ìgbéyàwó Ìbílẹ̀",
-    subtitle: "The Traditional Engagement · 11:00 in the morning",
+    subtitle: "The Traditional Engagement · 10:00 in the morning",
     pages: [
       {
         heading: "Ìkíni",
@@ -252,7 +252,7 @@ const WEDDING = {
         heading: "Words & Toasts",
         items: [
           { time: "16:00", title: "Toast to the Couple", by: "Damilare, the Best Man" },
-          { time: "16:10", title: "A Word from the Best Lady", by: "Stephanie" },
+          { time: "16:10", title: "A Word from the Best Lady", by: "Nafisat" },
           { time: "16:20", title: "Parents' Blessing" },
         ],
       },
@@ -361,7 +361,7 @@ const WEDDING = {
 
     contact: {
       title: "Questions on the Day",
-      body:  "Damilare (Best Man)\nStephanie (Best Lady)",   // ← add phone numbers when ready
+      body:  "Damilare (Best Man)\nNafisat (Best Lady)",   // ← add phone numbers when ready
     },
 
     /* The wedding party. More names to follow. */
@@ -371,8 +371,8 @@ const WEDDING = {
         {
           name: "For the Bride",
           people: [
-            { name: "Stephanie", role: "Best Lady" },
-            { name: "Nafisat",   role: "Bridesmaid" },
+            { name: "Nafisat",   role: "Best Lady" },
+            { name: "Stephanie", role: "Bridesmaid" },   // ← CHECK  was Best Lady
             { name: "Wisdom",    role: "Bridesmaid" },
           ],
         },

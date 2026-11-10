@@ -96,12 +96,49 @@
           '<div class="faq__item">' +
             '<button class="faq__q" type="button" data-faq="' + i + '" ' +
               'aria-expanded="false">' + esc(it.q) + "<span>+</span></button>" +
-            '<div class="faq__a">' + esc(it.a) + "</div>" +
+            '<div class="faq__a"><div>' + esc(it.a) + "</div></div>" +
           "</div>"
         ).join("") +
         "</div>" +
       "</section>"
     );
+  }
+
+  /* ── the romance: a laurel heart at the top, petals drifting behind, and
+     each panel rising gently into view as the guest scrolls to it ────── */
+  function adorn(root) {
+    const CS = window.ComingSoon;
+    const head = $(".section__head");
+    if (CS && head && !head.querySelector(".details__heart")) {
+      head.insertAdjacentHTML("afterbegin",
+        '<div class="details__heart" aria-hidden="true">' +
+          '<svg viewBox="44 45 132 114"><g>' + CS.HEART + "</g></svg></div>");
+    }
+    if (CS) {
+      root.insertAdjacentHTML("beforebegin",
+        '<div class="details__petals" aria-hidden="true">' + CS.petals(12) + "</div>");
+    }
+
+    const panels = Array.from(root.querySelectorAll(".panel"));
+    panels.forEach((p) => {
+      p.classList.add("rise");
+      // let lists inside a panel bloom one item after another
+      p.querySelectorAll(".swatch, .party__group li").forEach((el, i) => el.style.setProperty("--i", i));
+    });
+
+    if (!("IntersectionObserver" in window)) {
+      panels.forEach((p) => p.classList.add("is-in"));
+      return;
+    }
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((en) => {
+        if (!en.isIntersecting) return;
+        en.target.classList.add("is-in");
+        io.unobserve(en.target);
+      });
+    }, { threshold: 0.12, rootMargin: "0px 0px -6% 0px" });
+    panels.forEach((p) => io.observe(p));
+    Site.onLeave(() => io.disconnect());
   }
 
   Site.page(() => {
@@ -116,6 +153,7 @@
       partyPanel(d.party) +
       faqPanel(d.faq) +
       textPanel(d.contact);
+    adorn($("#details"));
 
     /* Accordion. */
     $("#details").addEventListener("click", (e) => {

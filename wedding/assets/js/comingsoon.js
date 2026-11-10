@@ -63,5 +63,6 @@
     return true;
   }
 
-  window.ComingSoon = { mount };
+  /* The laurel heart and the petals are shared with the details page. */
+  window.ComingSoon = { mount, HEART, petals };
 })();

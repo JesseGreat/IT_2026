@@ -284,11 +284,23 @@
       document.addEventListener("visibilitychange", () => { if (document.hidden) remember(); });
       setInterval(remember, 2000);   // a phone may kill the tab without pagehide
 
-      // Arriving on a page other than the entrance, having already entered:
-      // try to keep playing. If the browser blocks it, the button is waiting.
+      // Arriving fresh on a page, having already entered (a reload, a new
+      // deploy, an offline fallback): try to keep playing. Phones refuse
+      // sound without a tap, so if this is blocked, the guest's next tap
+      // anywhere on the page picks the song up where it left off.
       if (store.entered) {
         toggle.hidden = false;
-        if (store.on) play(true);
+        if (store.on) {
+          play(true).then((ok) => {
+            if (ok) return;
+            const resume = (e) => {
+              if (toggle.contains(e.target)) return;      // the button handles itself
+              document.removeEventListener("pointerdown", resume, true);
+              if (store.on && audio && audio.paused) play(true);
+            };
+            document.addEventListener("pointerdown", resume, true);
+          });
+        }
         paint();
       }
     }
@@ -341,7 +353,7 @@
     }
 
     async function go(url, push) {
-      if (stale || !window.fetch || !window.DOMParser) { location.href = url; return; }
+      if ((stale && !Music.playing) || !window.fetch || !window.DOMParser) { location.href = url; return; }
       const token = ++seq;
 
       let doc;
@@ -422,11 +434,15 @@
     }
 
     /* A new deploy has taken over. Refresh straight away — unless the music
-       is playing, in which case wait for the next tab tap, so the song isn't
-       cut off mid-verse. */
+       is playing. Then tabs keep switching in place so the song is never cut
+       off, and the refresh waits for a quiet moment: the next tab tap after
+       the music is paused, or the guest stepping away with the music off. */
     function newVersion() {
-      if (Music.playing) stale = true;
-      else location.reload();
+      if (!Music.playing) { location.reload(); return; }
+      stale = true;
+      document.addEventListener("visibilitychange", () => {
+        if (document.hidden && !Music.playing) location.reload();
+      });
     }
 
     return { mount, newVersion };
