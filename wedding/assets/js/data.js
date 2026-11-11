@@ -269,7 +269,7 @@ const WEDDING = {
         items: [
           { time: "17:30", title: "Dancing & Spraying" },
           { time: "18:30", title: "Owambe Set", by: "The DJ" },
-          { time: "19:30", title: "The Send-Off" },
+          { time: "19:30", title: "Lights Off (After Party)" },
         ],
       },
     ],
@@ -368,22 +368,19 @@ const WEDDING = {
     party: {
       title: "The Wedding Party",
       groups: [
+        /* A group with a `lead` shows that person on their own line, then
+           `names` flowing together beneath the `crew` label. */
         {
-          name: "For the Bride",
-          people: [
-            { name: "Nafisat",   role: "Best Lady" },
-            { name: "Stephanie", role: "Bridesmaid" },   // ← CHECK  was Best Lady
-            { name: "Wisdom",    role: "Bridesmaid" },
-          ],
+          name:  "For the Bride",
+          lead:  { name: "Nafisat", role: "Best Lady" },
+          crew:  "Bridesmaids",
+          names: ["Stephanie", "Meenah", "Deenak", "Taiwo", "Uswat", "Hikmat", "Hipsy", "Kattyhub"],
         },
         {
-          name: "For the Groom",
-          people: [
-            { name: "Damilare",      role: "Best Man" },
-            { name: "Dami Williams", role: "Groomsman" },
-            { name: "Joshua",        role: "Groomsman" },
-            { name: "Robor",         role: "Groomsman" },
-          ],
+          name:  "For the Groom",
+          lead:  { name: "Damilare", role: "Best Man" },
+          crew:  "Groomsmen",
+          names: ["Leke", "Seun", "Joshua", "Michael", "Mayowa", "Samson", "Square", "Robor"],
         },
         {
           name: "With Gratitude",

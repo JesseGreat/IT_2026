@@ -76,11 +76,23 @@
       '<section class="panel">' +
         '<h2 class="panel__title">' + esc(party.title) + "</h2>" +
         party.groups.map((g) =>
-          '<div class="party__group"><h4>' + esc(g.name) + "</h4><ul>" +
-          g.people.map((p) =>
-            "<li><span>" + esc(p.name) + "</span><span>" + esc(p.role) + "</span></li>"
-          ).join("") +
-          "</ul></div>"
+          '<div class="party__group"><h4>' + esc(g.name) + "</h4>" +
+          (g.lead
+            ? '<p class="party__lead"><span>' + esc(g.lead.name) + "</span>" +
+                "<small>" + esc(g.lead.role) + "</small></p>"
+            : "") +
+          (g.names && g.names.length
+            ? (g.crew ? '<p class="party__crew">' + esc(g.crew) + "</p>" : "") +
+              '<ul class="party__names">' +
+                g.names.map((n) => "<li>" + esc(n) + "</li>").join("") +
+              "</ul>"
+            : "") +
+          (g.people
+            ? "<ul>" + g.people.map((p) =>
+                "<li><span>" + esc(p.name) + "</span><span>" + esc(p.role) + "</span></li>"
+              ).join("") + "</ul>"
+            : "") +
+          "</div>"
         ).join("") +
       "</section>"
     );
@@ -123,7 +135,7 @@
     panels.forEach((p) => {
       p.classList.add("rise");
       // let lists inside a panel bloom one item after another
-      p.querySelectorAll(".swatch, .party__group li").forEach((el, i) => el.style.setProperty("--i", i));
+      p.querySelectorAll(".swatch, .party__lead, .party__group li").forEach((el, i) => el.style.setProperty("--i", i));
     });
 
     if (!("IntersectionObserver" in window)) {

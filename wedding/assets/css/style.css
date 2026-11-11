@@ -1251,6 +1251,55 @@ main { padding: 1.5rem 1.15rem calc(var(--nav-h) + 3.4rem); }
 .party__group li span:first-child { font-family: var(--display); font-size: 1.06rem; color: var(--em-700); }
 .party__group li span:last-child { color: var(--ink-faint); font-size: .72rem; letter-spacing: .06em; text-align: right; }
 
+/* the best lady or best man, given a line of their own */
+.party__lead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: .2rem 0 .55rem;
+  border-bottom: 1px solid rgba(138,107,20,.3);
+}
+.party__lead span { font-family: var(--display); font-size: 1.45rem; color: var(--em-700); }
+.party__lead small {
+  font-size: .62rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--gold-700);
+}
+.party__crew {
+  margin-top: .75rem;
+  font-size: .6rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+/* everyone else flows together, a small heart between each name */
+.party__group .party__names {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: .15rem 0;
+  margin-top: .3rem;
+}
+.party__group .party__names li {
+  display: inline;
+  padding: 0;
+  border: 0;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 1.12rem;
+  color: var(--em-700);
+}
+.party__group .party__names li:not(:last-child)::after {
+  content: "\2661";
+  margin: 0 .5rem;
+  font-style: normal;
+  font-size: .7rem;
+  color: var(--gold-500);
+  vertical-align: .15em;
+}
+
 .faq__item { border-bottom: 1px solid rgba(138,107,20,.22); }
 .faq__item:last-child { border-bottom: 0; }
 .faq__q {
@@ -1340,12 +1389,14 @@ main { padding: 1.5rem 1.15rem calc(var(--nav-h) + 3.4rem); }
 
 /* swatches and the wedding party bloom in one after another */
 .panel.rise .swatch,
-.panel.rise .party__group li {
+.panel.rise .party__group li,
+.panel.rise .party__lead {
   opacity: 0;
   transform: translateY(.6rem);
 }
 .panel.rise.is-in .swatch,
-.panel.rise.is-in .party__group li {
+.panel.rise.is-in .party__group li,
+.panel.rise.is-in .party__lead {
   animation: bloom .8s var(--ease) both;
   animation-delay: calc(.25s + var(--i, 0) * .11s);
 }
