@@ -380,7 +380,7 @@ const WEDDING = {
           name:  "For the Groom",
           lead:  { name: "Damilare", role: "Best Man" },
           crew:  "Groomsmen",
-          names: ["Leke", "Seun", "Joshua", "Michael", "Mayowa", "Samson", "Square", "Robor"],
+          names: ["Leke", "Seun", "Joshua", "Michael", "Mayowa", "Samson", "Square", "Robor", "IG"],
         },
         {
           name: "With Gratitude",
