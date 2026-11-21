@@ -126,23 +126,44 @@ const WEDDING = {
     subtitle: "Solemnization of Holy Matrimony · 8:00 in the morning",
     pages: [
       {
+        heading: "Our Wedding Programme",
+        subtitle: "Solemnization of Holy Matrimony between",
+        lead:  "Oluwabukola Adebisi\n&\nOluwatobiloba Okunogbe",   // ← CHECK  surnames, as in section 1
+        items: [
+          { title: "Saturday, 28th November 2026" },
+          { title: "8:00 in the morning" },
+          { title: "Halatria Hotel and Towers", note: "KM2, adjacent Osogbo City Stadium, New Ikirun Road, Osogbo, Osun State" },
+        ],
+      },
+      {
+        heading: "Officiating Ministers",
+        items: [                              // ← CHECK  copied from the sample booklet — update with yours
+          { title: "Bishop David Oluwole" },
+          { title: "Apostle Victor Oluwanoyero" },
+          { title: "Pastor (Dr.) Fakayode Sunday" },
+          { title: "Pastor Oladosu Taiwo" },
+          { title: "Pastor Godwin Vincent" },
+          { title: "Pastor Oladotun Ayelagbe" },
+        ],
+      },
+      {
         heading: "The Gathering",
         items: [
           { title: "Play Song" },
           { title: "Prayers" },
           { title: "Processional Hymn", by: "Ọkàn Mi Yọ̀ Nínú Olúwa · My Soul Is Happy in Jesus",
             words: "okanMiYo" },
-          { title: "The Exhortation" },
+          { title: "The Exhortation", words: "exhortation" },
         ],
       },
       {
         heading: "The Marriage",
         items: [
-          { title: "Charge and Declaration" },
+          { title: "Charge and Declaration", words: "charge" },
           { title: "Hymn", by: "Ire T'a Sú Ní Édẹ́nì · The Voice That Breathed o'er Eden",
             note: "I.O.M. 503 · Hymn 522", words: "ireTasu" },
-          { title: "Solemnization of the Marriage", note: "Vows and the giving of rings" },
-          { title: "The Acclamation", note: "The mother of the groom welcomes the bride" },
+          { title: "Solemnization of the Marriage", note: "Vows and the giving of rings", words: "solemnization" },
+          { title: "The Acclamation", note: "The mother of the groom welcomes the bride", words: "acclamation" },
         ],
       },
       {
@@ -152,16 +173,16 @@ const WEDDING = {
           { title: "Psalm 128", words: "psalm128" },
           { title: "New Testament Reading", by: "Ephesians 5:22–33", note: "Read by the bride" },
           { title: "Hymn", by: "Ògo Ni F'Olúwa · To God Be the Glory", words: "ogoNiFoluwa" },
-          { title: "Message" },
+          { title: "Message", note: "Opens with a prayer for the couple", words: "collect" },
         ],
       },
       {
         heading: "Prayer & Blessing",
         items: [
           { title: "Hymn" },                       // ← CHECK  this hymn isn't named in the booklet
-          { title: "Prayer and Benediction" },
+          { title: "Prayer and Benediction", words: "benediction" },
           { title: "Signing of the Marriage Register", note: "Choir special choruses" },
-          { title: "Presentation of the Couple", note: "Mr. & Mrs. Okunogbe" },
+          { title: "Introduction of the Couple", note: "Mr. & Mrs. Okunogbe", words: "introduction" },
         ],
       },
       {
@@ -267,6 +288,148 @@ const WEDDING = {
               "To God be the glory, great things He hath done!\nSo loved He the world that He gave us His Son,\nWho yielded His life an atonement for sin,\nAnd opened the life gate that all may go in.",
               "O perfect redemption, the purchase of blood,\nTo every believer the promise of God;\nThe vilest offender who truly believes,\nThat moment from Jesus a pardon receives.",
               "Great things He hath taught us, great things He hath done,\nAnd great our rejoicing through Jesus the Son;\nBut purer, and higher, and greater will be\nOur wonder, our transport, when Jesus we see.",
+            ] },
+        ],
+      },
+
+      /* ── The spoken parts of the service ─────────────────────────────────
+         Each line is one of:
+           "Plain text"                       — spoken by the minister
+           { r: "..." }                       — a direction, printed in italics
+           { who: "The Groom", say: "..." }   — a named speaker
+         ─────────────────────────────────────────────────────────────── */
+
+      exhortation: {
+        label: "Read along",
+        parts: [
+          { lang: "The Exhortation", title: "Dearly Beloved",
+            liturgy: [
+              "Dearly beloved, we are gathered here in the presence of God and before this congregation to join Oluwabukola and Oluwatobiloba in Holy Matrimony. Marriage is a holy estate, instituted by God and commended in the Scriptures, confirmed by Christ's solemn words and hallowed by His gracious presence at the marriage feast in Cana. It is declared by the great Apostle Paul to signify the mystical union that is between Christ and His Church. Therefore it ought not to be entered into lightly, but thoughtfully, reverently, discreetly, soberly and in the fear of God, duly considering the causes for which it was ordained.",
+              "Firstly, marriage was ordained for companionship, mutual society, help and comfort, which husband and wife ought to have from each other, in all circumstances.",
+              "Secondly, marriage was ordained for the procreation of children, to be brought up in the fear and nurture of the Lord, to the praise of His holy name.",
+              "Thirdly, marriage was ordained as a protection against sin and for the avoidance of all sexual immorality, that those who have not the rare gift of celibacy might marry and keep themselves undefiled members of Christ's body.",
+              "Into this holy estate of marriage Oluwabukola and Oluwatobiloba come now to be joined. Therefore, if any man can show any just cause why they may not lawfully be joined together, let him now declare it, or else hereafter hold his peace.",
+            ] },
+        ],
+      },
+
+      charge: {
+        label: "Read along",
+        parts: [
+          { lang: "Charge and Declaration", title: "The Charge",
+            liturgy: [
+              { r: "The minister says:" },
+              "I require and charge you both, as you shall answer on the dreadful day of judgement, when the secrets of all hearts shall be disclosed, that if either of you know of any impediment why you may not lawfully be joined together in Holy Matrimony, you do now confess it. Be well assured that if any persons are joined together otherwise than God's Word allows, they are not united by God.",
+              { who: "The Groom", say: "I do truthfully declare that I do not know of any lawful reason why I, Oluwatobiloba, may not be joined together in matrimony to Oluwabukola." },
+              { who: "The Bride", say: "I do truthfully declare that I do not know of any lawful reason why I, Oluwabukola, may not be joined together in matrimony to Oluwatobiloba." },
+              { r: "If no impediment is alleged, the minister says to the groom:" },
+              "Oluwatobiloba, will you have Oluwabukola to be your wedded wife, to live together according to God's ordinance in the holy estate of marriage? Will you love her, comfort her, honour her, keep her in sickness and in health, and, forsaking all others, cleave to her as long as you both shall live?",
+              { who: "The Groom", say: "I will, the Lord being my help." },
+              { r: "Then the minister asks the bride:" },
+              "Oluwabukola, will you have Oluwatobiloba to be your wedded husband, to live together according to God's ordinance in the holy estate of marriage? Will you love him, comfort him, honour him and keep him in sickness and in health, and, forsaking all others, cleave only to him as long as you both shall live?",
+              { who: "The Bride", say: "I will, the Lord being my help." },
+            ] },
+        ],
+      },
+
+      solemnization: {
+        label: "Read along",
+        parts: [
+          { lang: "Solemnization", title: "The Marriage",
+            liturgy: [
+              { r: "The minister asks:" },
+              "Who gives this woman to be married to this man?",
+              { r: "The father of the bride, or a representative of the family, comes forward, hands the bride to the minister and says:" },
+              { who: "The Family", say: "I do." },
+
+              { r: "The minister, receiving the bride's hand, causes the man to take the woman by the right hand. Facing each other, the groom says:" },
+              { who: "The Groom", say: "I, Oluwatobiloba, take you, Oluwabukola, to be my wife, to have and to hold from this day forward, for better, for worse, for richer, for poorer, in sickness and in health, to love and to cherish, until we are parted by death, according to God's holy law. This is my solemn vow." },
+              { r: "They loose hands. The bride takes the groom by the right hand and says:" },
+              { who: "The Bride", say: "I, Oluwabukola, take you, Oluwatobiloba, to be my husband, to have and to hold from this day forward, for better, for worse, for richer, for poorer, in sickness and in health, to love and to cherish, until we are parted by death, according to God's holy law. This is my solemn vow." },
+
+              { r: "The minister asks:" },
+              "And what token do you share to represent your love and commitment to each other?",
+              { r: "The minister receives the rings and, holding them up, says:" },
+              "The ring is the symbol of wholeness and perfection. It is made of gold, which is a precious and durable metal. What better representation of your feelings for each other?",
+              { r: "Then he prays:" },
+              "Heavenly Father, by Your blessing, let these rings be to Oluwatobiloba and Oluwabukola a symbol of unending love and faithfulness, to remind them of the vow and covenant which they have made this day; through Jesus Christ our Lord. Amen.",
+
+              { r: "The groom places the ring on the fourth finger of the bride's left hand and, holding it there, says:" },
+              { who: "The Groom", say: "I give you this ring as a sign of our marriage. With my body I honour you; all that I am I give to you, within the love of God the Father, the Son and the Holy Spirit. Amen." },
+              { r: "They loose hands. The bride places a ring on the groom's fourth finger and, holding it there, says:" },
+              { who: "The Bride", say: "I give you this ring as a sign of our marriage. With my body I honour you; all that I am I give to you, within the love of the Father, the Son and the Holy Spirit. Amen." },
+
+              { r: "The bride and groom kneel, while the congregation rises. The minister says:" },
+              "Eternal God, Creator and Preserver of all, Giver of all spiritual grace and the Author of everlasting life, send Your blessing upon Oluwatobiloba and Oluwabukola, whom we bless in Your name; that, living faithfully together, they may fulfil the vow and covenant they have made, of which these rings given and received are a token and pledge. May they ever remain in perfect love and peace together, and live according to Your laws, through Jesus Christ our Lord. Amen.",
+              "Now that Oluwatobiloba and Oluwabukola have given their consent and made their vows to each other before God and this congregation, with the joining of hands and the giving of rings, I declare that they are husband and wife, in the name of God the Father, God the Son and God the Holy Spirit. Amen.",
+              { r: "The minister joins their right hands together and says:" },
+              "Those whom God has joined together, let no man put asunder. Amen.",
+
+              { r: "The congregation remains standing; the couple kneel, and the minister blesses them:" },
+              "God the Father, God the Son and God the Holy Spirit bless, preserve and keep you. May the Lord pour upon you the riches of His grace, that you may faithfully live together and receive the blessing of eternal life. Amen.",
+              { r: "The minister says to the parents:" },
+              "As Oluwatobiloba and Oluwabukola enter a new life together, will you, their parents, give them your blessing in the presence of this congregation?",
+              { who: "The Parents", say: "May God bless you both, in Jesus' name." },
+              { r: "The minister may ask the congregation:" },
+              "You, as friends and families, have come to witness this exchange of vows. Will you do all in your power to support this marriage, now and in the years ahead?",
+              { who: "All", say: "We will, in Jesus' name." },
+              { r: "The congregation remains standing while the couple kneel, and the minister blesses them:" },
+              "May God the Father, God the Son and God the Holy Spirit bless, preserve and keep you, both in body and soul. May the Lord mercifully grant you the riches of His grace, that you may please Him both in body and soul, and, living together in faith and love, may you receive the blessing of eternal life. Amen.",
+            ] },
+        ],
+      },
+
+      acclamation: {
+        label: "Read along",
+        parts: [
+          { lang: "The Acclamation", title: "Welcome to the Family",
+            liturgy: [
+              { r: "The mother of the groom comes forward. The minister says:" },
+              "In the name of God and in the presence of this congregation, we hand Oluwabukola, now Mrs. Okunogbe, to you as a full member of your family. Will you promise, on behalf of your family, to continue to uphold them in your prayers and give them your moral support?",
+              { who: "The Mother", say: "I promise, in the name of God." },
+              { r: "The minister prays for the family:" },
+              "Eternal God, Creator and Sustainer of us all, give Your grace to the Okunogbe family. Grant that in the years ahead they may be united in Your love, and in the strength of the Holy Spirit may live together in the love, joy and peace of our Saviour Jesus Christ. Amen.",
+            ] },
+        ],
+      },
+
+      collect: {
+        label: "Read along",
+        parts: [
+          { lang: "Before the Readings", title: "Let Us Pray",
+            liturgy: [
+              { who: "Minister", say: "The Lord be with you." },
+              { who: "All", say: "And also with you." },
+              { who: "Minister", say: "Let us pray." },
+              "O gracious and everlasting God, You have created us male and female in Your image. Look mercifully upon this man and this woman who have come to You seeking Your blessing, and assist them with Your grace, that through fidelity and steadfast love they may honour and keep the promises and vows they have made; through Jesus Christ our Lord, who lives and reigns with You in the unity of the Holy Spirit, one God, for ever and ever. Amen.",
+            ] },
+        ],
+      },
+
+      benediction: {
+        label: "Read along",
+        parts: [
+          { lang: "Prayer and Benediction", title: "The Prayers",
+            liturgy: [
+              "Almighty God, the most merciful Father, the strengthener of all who put their trust in You: we pray that as You have brought Oluwabukola and Oluwatobiloba together by Your providence, so You will enrich them by Your grace, that those vows which they have made to one another in Your sight they may truly and faithfully perform; through Jesus Christ our Lord. Amen.",
+              "Almighty Father, You have created all mankind to glorify You in body and in spirit. Give these children of Yours joy in one another, as living temples of the Holy Spirit, and bring them by this joy to know and share in Your creative and redeeming love; through Jesus Christ our Lord. Amen.",
+              "Eternal God, true and loving Father, in holy marriage You make Your servants one. May their life together witness to Your love in this troubled world. May unity overcome division, forgiveness heal injury, and joy triumph over sorrow; through Jesus Christ our Lord. Amen.",
+              "We praise You, Father, that You have made all things and hold all things in being. In the beginning You created the universe and made mankind in Your own likeness; because it was not good for man to be alone, You created them male and female, and in marriage You join man and woman in one flesh, teaching us that what You have united may never be divided. We praise You that You have made this holy mystery a symbol of the marriage of Christ with His Church, and an image of Your eternal covenant with Your people. And we pray for Your blessing on this man and woman, who come before You as partners and heirs together of Your promises. Grant that this man may love his wife as Christ loves His bride, the Church, giving Himself for it and cherishing it as His own flesh; and grant that this woman may love her husband and follow the example of those holy women whose praises are sung in the Scriptures; and as witnesses of Christ to one another, let them live to see their children's children, and bring them at the last to the fullness of life with the saints in the kingdom of heaven; through Jesus Christ our Lord. Amen.",
+              "Heavenly Father, we pray that through their marriage Oluwatobiloba and Oluwabukola may know You more clearly, love You more dearly and follow You more nearly, day by day; through Jesus Christ our Lord. Amen.",   // ← CHECK  the start of this prayer was cut off in the photo
+              "Almighty God, our heavenly Father, who gave marriage to be a source of blessing to mankind, we thank You for the joys of family life. May we know Your presence and peace in our homes; fill us with Your love, and use us for Your glory; through Jesus Christ our Lord.",
+              { r: "The benediction:" },
+              "And the blessing of God the Father, God the Son and God the Holy Spirit be upon you, now and for evermore. Amen.",
+            ] },
+        ],
+      },
+
+      introduction: {
+        label: "Read along",
+        parts: [
+          { lang: "Introduction of the Couple", title: "Mr. & Mrs. Okunogbe",
+            liturgy: [
+              { r: "With the couple facing the congregation, the minister says:" },
+              "Brothers and sisters, I am happy to present to you: Mr. & Mrs. Oluwatobiloba Okunogbe!",
             ] },
         ],
       },

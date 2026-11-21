@@ -1041,6 +1041,16 @@ main { padding: 1.5rem 1.15rem calc(var(--nav-h) + 3.4rem); }
   color: var(--ink-soft);
 }
 
+/* the names on a booklet's title page */
+.leaf__lead {
+  margin-top: 1.1rem;
+  font-family: var(--display);
+  font-size: 1.55rem;
+  line-height: 1.3;
+  text-align: center;
+  color: var(--em-700);
+}
+
 /* "happening now" marker on timed items */
 .order li.is-now::before {
   content: "";
@@ -1657,6 +1667,37 @@ html.has-sheet, html.has-sheet body { overflow: hidden; }
   color: var(--ink);
 }
 .words__chorus p { font-style: italic; color: var(--olive-700); }
+
+/* the spoken parts of the service */
+.lit { margin-top: 1.3rem; }
+.lit__say {
+  margin: 0 0 1rem;
+  font-family: var(--display);
+  font-size: 1.12rem;
+  line-height: 1.6;
+  color: var(--ink);
+}
+.lit__rubric {
+  margin: 1.4rem 0 .45rem;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--olive-700);
+}
+.lit__part {
+  margin: 0 0 1rem;
+  padding-left: .85rem;
+  border-left: 2px solid rgba(138,107,20,.4);
+}
+.lit__part .lit__say { margin: .1rem 0 0; color: var(--em-700); }
+.lit__who {
+  font-family: var(--ui);
+  font-size: .6rem;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--gold-700);
+}
 
 @media (prefers-reduced-motion: reduce) {
   .words__scrim, .words__panel { transition: none; }

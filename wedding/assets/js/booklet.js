@@ -108,6 +108,7 @@
         '<h2 class="leaf__heading">' + esc(page.heading) + "</h2>" +
         (page.subtitle ? '<p class="leaf__sub">' + esc(page.subtitle) + "</p>" : "") +
         FLEURON +
+        (page.lead ? '<p class="leaf__lead">' + lines(page.lead) + "</p>" : "") +
         (items.length
           ? '<ul class="order">' +
               items.map((it, ii) =>
@@ -129,6 +130,7 @@
 
   function renderWords(w) {
     return (w.parts || []).map((part) => {
+      if (part.liturgy) return renderLiturgy(part);
       const verses = part.verses || [];
       let body = "";
       verses.forEach((v, i) => {
@@ -156,6 +158,29 @@
         "</section>"
       );
     }).join("");
+  }
+
+  /* The spoken parts: plain strings are the minister's words, { r } is a
+     direction in italics, { who, say } is someone else speaking. */
+  function renderLiturgy(part) {
+    const body = part.liturgy.map((line) => {
+      if (typeof line === "string") return '<p class="lit__say">' + lines(line) + "</p>";
+      if (line.r) return '<p class="lit__rubric">' + lines(line.r) + "</p>";
+      return (
+        '<div class="lit__part">' +
+          '<span class="lit__who">' + esc(line.who || "") + "</span>" +
+          '<p class="lit__say">' + lines(line.say || "") + "</p>" +
+        "</div>"
+      );
+    }).join("");
+    return (
+      '<section class="words__part">' +
+        '<p class="words__lang">' + esc(part.lang || "") + "</p>" +
+        '<h3 class="words__title">' + esc(part.title || "") + "</h3>" +
+        FLEURON +
+        '<div class="lit">' + body + "</div>" +
+      "</section>"
+    );
   }
 
   /** Open the words for `key` in a sheet; returns a function that closes it. */
