@@ -84,7 +84,7 @@ const WEDDING = {
          church: false,      ← do this when the order of service is ready
      ───────────────────────────────────────────────────────────────────── */
   comingSoon: {
-    church:      true,
+    church:      false,   // live — but behind the passcode below
     traditional: true,
     reception:   false,
     details:     false,
@@ -93,6 +93,20 @@ const WEDDING = {
     year:     "2026",
     headline: "Coming Soon",
     note:     "Our full programme will appear here",   // set to null to hide
+
+    /* A page listed here is live, but only for someone with the passcode,
+       until the morning of  openOn  — then it opens for every guest by
+       itself. Everyone else sees the Coming Soon design, with a small
+       "Minister's access" box beneath it. Once a phone has unlocked the
+       page it stays unlocked. Change the passcode and every phone is
+       locked out again. Delete a line to open that page to everyone now.
+
+       This keeps the page from casual eyes; it is not real security. The
+       words themselves sit in this file, which anyone who knows how can
+       read. Fine for an order of service, not for anything secret. */
+    locked: {
+      church: { passcode: "HOLY2811", openOn: "2026-11-28" },
+    },
   },
 
   /* ── 6. THE THREE BOOKLETS ──────────────────────────────────────────────
@@ -109,51 +123,53 @@ const WEDDING = {
 
   church: {
     title:    "Order of Service",
-    subtitle: "Holy Matrimony · 8:00 in the morning",
+    subtitle: "Solemnization of Holy Matrimony · 8:00 in the morning",
     pages: [
       {
         heading: "The Gathering",
         items: [
-          { title: "Processional", note: "The congregation stands" },
-          { title: "Entrance of the Bride" },
-          { title: "Opening Hymn" },
-          { title: "Opening Prayer" },
-        ],
-      },
-      {
-        heading: "The Word",
-        items: [
-          { title: "First Reading" },
-          { title: "Hymn" },
-          { title: "Second Reading" },
-          { title: "The Sermon" },
+          { title: "Play Song" },
+          { title: "Prayers" },
+          { title: "Processional Hymn", by: "Ọkàn Mi Yọ̀ Nínú Olúwa · My Soul Is Happy in Jesus",
+            words: "okanMiYo" },
+          { title: "The Exhortation" },
         ],
       },
       {
         heading: "The Marriage",
         items: [
-          { title: "The Declaration of Consent" },
-          { title: "The Exchange of Vows" },
-          { title: "The Blessing & Exchange of Rings" },
-          { title: "The Proclamation", note: "Those whom God hath joined together, let no one put asunder" },
+          { title: "Charge and Declaration" },
+          { title: "Hymn", by: "Ire T'a Sú Ní Édẹ́nì · The Voice That Breathed o'er Eden",
+            note: "I.O.M. 503 · Hymn 522", words: "ireTasu" },
+          { title: "Solemnization of the Marriage", note: "Vows and the giving of rings" },
+          { title: "The Acclamation", note: "The mother of the groom welcomes the bride" },
         ],
       },
       {
-        heading: "The Blessing",
+        heading: "The Ministry of the Word",
         items: [
-          { title: "Blessing of the Marriage" },
-          { title: "Anthem", by: "The Choir" },
-          { title: "Signing of the Marriage Register" },
-          { title: "Prayers for the Couple" },
+          { title: "Old Testament Reading", by: "Genesis 2:18–24", note: "Read by the groom" },
+          { title: "Psalm 128", words: "psalm128" },
+          { title: "New Testament Reading", by: "Ephesians 5:22–33", note: "Read by the bride" },
+          { title: "Hymn", by: "Ògo Ni F'Olúwa · To God Be the Glory", words: "ogoNiFoluwa" },
+          { title: "Message" },
+        ],
+      },
+      {
+        heading: "Prayer & Blessing",
+        items: [
+          { title: "Hymn" },                       // ← CHECK  this hymn isn't named in the booklet
+          { title: "Prayer and Benediction" },
+          { title: "Signing of the Marriage Register", note: "Choir special choruses" },
+          { title: "Presentation of the Couple", note: "Mr. & Mrs. Okunogbe" },
         ],
       },
       {
         heading: "The Sending",
         items: [
-          { title: "Presentation of the Couple", note: "Mr. & Mrs. Okunogbe" },
-          { title: "Closing Hymn" },
-          { title: "The Benediction" },
-          { title: "Recessional" },
+          { title: "Thanksgiving" },
+          { title: "Announcements" },
+          { title: "Withdrawal Hymn", by: "Mo Ntẹ̀síwájú · I'm Pressing On", words: "pressingOn" },
         ],
       },
       {
@@ -163,6 +179,122 @@ const WEDDING = {
         items: [],
       },
     ],
+
+    /* The words behind each "Sing along" button above. An item points here
+       with  words: "name".  Each hymn is printed in Yoruba, then English.
+       A verse is one string; \n starts a new line. */
+    words: {
+
+      okanMiYo: {
+        label: "Sing along",
+        parts: [
+          { lang: "Yorùbá", title: "Ọkàn Mi Yọ̀ Nínú Olúwa",
+            chorus: "Emi nyọ̀ ninu Rẹ (Oluwa)\nEmi nyọ̀ ninu Rẹ\n'Gba gbogbo l'o nfayọ̀ kun ọkan mi\n'Tori emi nyọ̀ ninu Rẹ",
+            verses: [
+              "Ọkan mi yọ̀ ninu Oluwa\n'Tori O jẹ iye fun mi\nOhun Rẹ dun pupọ lati gbọ\nAdun ni lati r'oju Rẹ",
+              "O ti nwa mi pẹ ki nto mọ O\n'Gba ti mo rin jina s'agbo\nO gbe mi wa sile l'apa Rẹ\nNibi ti papa tutu wa",
+              "Ire at'anu Rẹ yi mi ka\nOr'ọfẹ Rẹ nsan bi odo\nẸmi Rẹ nto, o si nsọ 'tunu\nO mba mi lọ si'bikibi",
+              "Emi y'o dabi Rẹ nijọ kan\nNgo sẹ'ru wiwo mi kalẹ\nTiti d'igbana ngo sọ'otọ\nNi ṣiṣe ọṣọ f'ade Rẹ",
+            ] },
+          { lang: "English", title: "My Soul Is Happy in Jesus",
+            chorus: "I am happy in Him,\nI am happy in Him;\nMy soul with delight\nHe fills day and night,\nFor I am happy in Him.",
+            verses: [
+              "My soul is so happy in Jesus,\nFor He is so precious to me;\nHis voice it is music to hear it,\nHis face it is heaven to see.",
+              "He sought me so long ere I knew Him,\nWhen wandering afar from the fold;\nSafe home in His arms He hath brought me,\nTo where there are pleasures untold.",
+              "His love and His mercy surround me,\nHis grace like a river doth flow;\nHis Spirit, to guide and to comfort,\nIs with me wherever I go.",
+              "They say I shall someday be like Him,\nMy cross and my burden lay down;\nTill then I will ever be faithful,\nIn gathering gems for His crown.",
+            ] },
+        ],
+      },
+
+      ireTasu: {
+        label: "Sing along",
+        parts: [
+          { lang: "Yorùbá", title: "Ire T'a Sú Ní Édẹ́nì", note: "I.O.M. 503",
+            verses: [
+              "Ire t'a su ni Edẹni\nN'igbeyawo kini\nIbukun t'a bukun wọn\nO wa sibẹ sibẹ",
+              "Sibẹ titi di oni\nN'igbeyawo Kristian\nỌlọrun wa laarin wa\nLati sure fun wa",
+              "Ire ki wọn le maa bi\nKi wọn k'o si maa rẹ\nKi wọn ni'dapọ mimọ\nT'ẹnikan k'yo le tu",
+              "Ba ni pe Baba, si fa\nObinrin yi f'ọkọ\nBi O ti fi Efa fun\nAdamu l'ọjọ kini",
+              "Ba wa pe Imanuẹli\nSiso ọwọ wọn pọ\nB'ẹda meji ti dapọ\nNi ara ijinlẹ Rẹ",
+              "Ba wa pe, Ẹmi Mimọ\nF'ibukun Rẹ fun wọn\nSise wọn ni aṣẹ pe\nGẹgẹ b'O ti maa nṣe",
+              "Fi wọn s'abẹ abo Rẹ\nK'ibi kan ma ba wọn\nGba wọn npa ra ile Rẹ\nMa toju ọkan wọn",
+              "Pẹlu wọn l'ọj'aye wọn\nAt'ọkọ at'aya\nTiti nwọn o de ọdọ Rẹ",
+            ] },
+          { lang: "English", title: "The Voice That Breathed o'er Eden", note: "Hymn 522",
+            verses: [
+              "The voice that breathed o'er Eden,\nThat earliest wedding day,\nThe primal marriage blessing,\nIt hath not passed away.",
+              "Still in the pure espousal\nOf Christian man and maid\nThe Holy Three are with us,\nThe threefold grace is said.",
+              "For dower of blessed children,\nFor love and faith's sweet sake,\nFor high mysterious union\nWhich nought on earth may break.",
+              "Be present, heavenly Father,\nTo give away this bride,\nAs Eve Thou gav'st to Adam\nOut of his own pierced side.",
+              "Be present, gracious Saviour,\nTo join their loving hands,\nAs Thou didst bind two natures\nIn Thine eternal bands.",
+              "Be present, Holy Spirit,\nTo bless them as they kneel,\nAs Thou for Christ the Bridegroom\nThe heavenly spouse dost seal.",
+              "O spread Thy pure wings o'er them!\nLet no ill power find place,\nWhen onward through life's journey\nThe hallowed path they trace,",
+              "Till to the home of gladness\nWith Christ's own Bride they rise,\nTo cast their crowns before Thee\nIn perfect sacrifice. Amen.",
+            ] },
+        ],
+      },
+
+      psalm128: {
+        label: "Read along",
+        parts: [
+          { lang: "Psalm", title: "Psalm 128",
+            numbered: true,
+            verses: [
+              "Blessed is everyone who fears the Lord, who walks in His ways!",
+              "You shall eat the fruit of the labour of your hands; you shall be blessed, and it shall be well with you.",
+              "Your wife will be like a fruitful vine within your house; your children will be like olive shoots around your table.",
+              "Behold, thus shall the man be blessed who fears the Lord.",
+              "The Lord bless you from Zion! May you see the prosperity of Jerusalem all the days of your life!",
+              "May you see your children's children! Peace be upon Israel!",
+            ] },
+        ],
+      },
+
+      ogoNiFoluwa: {
+        label: "Sing along",
+        parts: [
+          { lang: "Yorùbá", title: "Ògo Ni F'Olúwa",
+            chorus: "Yin Oluwa, yin Oluwa\nFiyin fun Oluwa\nYin Oluwa, yin Oluwa\nẸ yọ niwaju Rẹ\nK'a to Baba wa lọ\nL'orukọ Jesu\nJẹ k'a jọ fogo fun, Oniṣẹ-iyanu",
+            verses: [
+              "Ogo ni f'Oluwa to ṣe ohun nla\nIfẹ lo mu ko fun wa ni Ọmọ Rẹ\nẸni t'O fẹmi Rẹ lelẹ f'ẹṣẹ wa\nTo si ṣilẹkun iye silẹ fun wa",
+              "Irapada kikun ti Ẹjẹ Rẹ ra\nF'ẹnikẹni t'o gba ileri Rẹ gbọ\nẸni t'o buru ju b'o ba le gbagbọ\nLojukanna yio ri idariji gba",
+              "O ṣ'ohun nla fun wa, O da wa lare\nAyọ wa di kikun ninu Ọmọ Rẹ\nOgo ati ẹwa irapada yi\nYo ya wa lẹnu 'gba t'a ba ri Jesu",
+            ] },
+          { lang: "English", title: "To God Be the Glory",
+            chorus: "Praise the Lord, praise the Lord,\nLet the earth hear His voice!\nPraise the Lord, praise the Lord,\nLet the people rejoice!\nO come to the Father through Jesus the Son,\nAnd give Him the glory, great things He hath done!",
+            verses: [
+              "To God be the glory, great things He hath done!\nSo loved He the world that He gave us His Son,\nWho yielded His life an atonement for sin,\nAnd opened the life gate that all may go in.",
+              "O perfect redemption, the purchase of blood,\nTo every believer the promise of God;\nThe vilest offender who truly believes,\nThat moment from Jesus a pardon receives.",
+              "Great things He hath taught us, great things He hath done,\nAnd great our rejoicing through Jesus the Son;\nBut purer, and higher, and greater will be\nOur wonder, our transport, when Jesus we see.",
+            ] },
+        ],
+      },
+
+      pressingOn: {
+        label: "Sing along",
+        parts: [
+          { lang: "Yorùbá", title: "Mo Ntẹ̀síwájú",
+            chorus: "Oluwa jọ, gbe mi soke\nFa mi lọ si ibi giga\nApata t'o ga ju mi lọ\nOluwa jọ, gbe mi soke",
+            verses: [
+              "Mo ntẹsiwaju lọna na\nMo ngoke si lojojumọ\nMo ngbadura bi mo ti nlọ\nOluwa jọ, gbe mi soke",
+              "Ifẹ ọkan mi ko duro\nLarin 'yemeji at'ẹru\nAwọn miran le maa gbe 'bẹ\nIbi giga l'ọkan mi fẹ",
+              "Mo fẹ ki n ga ju aiye lọ\nB'eṣu tilẹ ngbogun ti mi\nMo nfi igbagbọ gbọ orin na\nTi awọn mimọ nkọ loke",
+              "Mo fẹ de ibi giga julọ\nNinu ogo didan julọ\nMo ngbadura ki nle de'bẹ\nOluwa mu mi de'bẹ na",
+              "Fa mi lọ si ibi giga\nLaisi Rẹ nko le de'bẹ\nFa mi titi d'oke ọrun\nKi nkọrin lat'ibi giga. Amin",
+            ] },
+          { lang: "English", title: "I'm Pressing On",
+            chorus: "Lord, lift me up and let me stand,\nBy faith, on heaven's tableland,\nA higher plane than I have found;\nLord, plant my feet on higher ground.",
+            verses: [
+              "I'm pressing on the upward way,\nNew heights I'm gaining every day;\nStill praying as I onward bound,\n\"Lord, plant my feet on higher ground.\"",
+              "My heart has no desire to stay\nWhere doubts arise and fears dismay;\nThough some may dwell where these abound,\nMy constant aim is higher ground.",
+              "Beyond the mist I fain would rise,\nTo rest beneath unclouded skies,\nAbove earth's turmoil, peace is found\nBy those who dwell on higher ground.",
+              "I long to scale the utmost height,\nThough rough the way, and hard the fight,\nMy song, while climbing, shall resound,\n\"Lord, lead me on to higher ground.\"",
+              "Lord, lead me up the mountain side,\nI dare not climb without my Guide;\nAnd, heaven gained, I'll gaze around\nWith grateful heart from higher ground. Amen.",
+            ] },
+        ],
+      },
+    },
   },
 
   traditional: {
@@ -231,45 +363,41 @@ const WEDDING = {
   reception: {
     title:    "The Reception",
     subtitle: "An Afternoon of Feasting & Dancing · 2:00",
+    /* The times are a guide for the "happening now" marker — ← CHECK them
+       against the MC's running order. */
     pages: [
-      {
-        heading: "Arrival",
-        items: [
-          { time: "14:00", title: "Guests Are Welcomed & Seated" },
-          { time: "14:20", title: "Small Chops & Refreshments" },
-          { time: "14:40", title: "Grand Entrance of the Couple" },
-        ],
-      },
       {
         heading: "The Welcome",
         items: [
-          { time: "14:50", title: "Opening Prayer & Welcome", by: "The Master of Ceremonies" },
-          { time: "15:05", title: "The First Dance" },
-          { time: "15:20", title: "Dinner Is Served" },
+          { time: "14:00", title: "Music" },
+          { time: "14:15", title: "Arrival of Guests" },
+          { time: "14:35", title: "Invitation of the High Table", by: "The Chairman · the Groom's Parents · the Bride's Family" },
+          { time: "14:50", title: "Arrival of the Couple" },
         ],
       },
       {
-        heading: "Words & Toasts",
+        heading: "The Opening",
         items: [
-          { time: "16:00", title: "Toast to the Couple", by: "Damilare, the Best Man" },
-          { time: "16:10", title: "A Word from the Best Lady", by: "Nafisat" },
-          { time: "16:20", title: "Parents' Blessing" },
+          { time: "15:05", title: "Opening Prayer" },
+          { time: "15:15", title: "Chairman's Opening Remarks" },
+          { time: "15:35", title: "Cutting of the Wedding Cake" },
+          { time: "15:50", title: "Dance by the Couple" },
         ],
       },
       {
-        heading: "Sweet & Celebration",
+        heading: "Toasts & Games",
         items: [
-          { time: "16:45", title: "Cutting of the Cake" },
-          { time: "16:55", title: "Champagne Toast" },
-          { time: "17:10", title: "Family Dance" },
+          { time: "16:05", title: "Toast to the Couple", by: "Damilare, the Best Man" },
+          { time: "16:20", title: "Games & Fun", note: "Led by the MC — be ready to join in" },
+          { time: "17:00", title: "Presentation of Gifts" },
         ],
       },
       {
         heading: "The Floor Is Open",
         items: [
-          { time: "17:30", title: "Dancing & Spraying" },
-          { time: "18:30", title: "Owambe Set", by: "The DJ" },
-          { time: "19:30", title: "Lights Off (After Party)" },
+          { time: "17:30", title: "Vote of Thanks" },
+          { time: "17:40", title: "Closing Prayer & Benediction" },
+          { time: "17:50", title: "Dance! Dance!! Dance!!!" },
         ],
       },
     ],

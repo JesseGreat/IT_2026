@@ -70,7 +70,8 @@
 
   /* ── rendering one leaf ───────────────────────────────────────────────── */
 
-  function renderItem(item, isNow) {
+  function renderItem(book, item, isNow) {
+    const words = item.words && book.words && book.words[item.words];
     const hasTime = !!item.time;
     return (
       '<li class="' + (isNow ? "is-now" : "") + '">' +
@@ -82,6 +83,10 @@
             "</div>" +
             (item.by   ? '<div class="order__by">'   + esc(item.by)   + "</div>" : "") +
             (item.note ? '<div class="order__note">' + esc(item.note) + "</div>" : "") +
+            (words
+              ? '<button class="order__words" type="button" data-words="' + esc(item.words) + '">' +
+                  esc(words.label || "Words") + ARROW_R + "</button>"
+              : "") +
           "</div>" +
         "</div>" +
       "</li>"
@@ -106,7 +111,7 @@
         (items.length
           ? '<ul class="order">' +
               items.map((it, ii) =>
-                renderItem(it, !!now && now.pageIndex === index && now.itemIndex === ii)
+                renderItem(book, it, !!now && now.pageIndex === index && now.itemIndex === ii)
               ).join("") +
             "</ul>"
           : "") +
@@ -114,6 +119,86 @@
         '<p class="leaf__folio">&#183;&nbsp;' + (index + 1) + '&nbsp;&#183;</p>' +
       "</article>"
     );
+  }
+
+  /* ── the words sheet: hymn lyrics, slid up over the booklet ─────────────── */
+
+  function lines(text) {
+    return String(text).split("\n").map(esc).join("<br>");
+  }
+
+  function renderWords(w) {
+    return (w.parts || []).map((part) => {
+      const verses = part.verses || [];
+      let body = "";
+      verses.forEach((v, i) => {
+        body +=
+          '<li class="words__verse">' +
+            '<span class="words__num">' + (i + 1) + "</span>" +
+            "<p>" + lines(v) + "</p>" +
+          "</li>";
+        // the chorus is printed once, after the first verse
+        if (i === 0 && part.chorus) {
+          body +=
+            '<li class="words__chorus">' +
+              '<span class="words__num">' + (part.lang === "Yorùbá" ? "Ègbè" : "Chorus") + "</span>" +
+              "<p>" + lines(part.chorus) + "</p>" +
+            "</li>";
+        }
+      });
+      return (
+        '<section class="words__part">' +
+          '<p class="words__lang">' + esc(part.lang || "") +
+            (part.note ? " \u00b7 " + esc(part.note) : "") + "</p>" +
+          '<h3 class="words__title">' + esc(part.title || "") + "</h3>" +
+          FLEURON +
+          '<ol class="words__list">' + body + "</ol>" +
+        "</section>"
+      );
+    }).join("");
+  }
+
+  /** Open the words for `key` in a sheet; returns a function that closes it. */
+  function openWords(book, key, returnFocus) {
+    const w = book.words && book.words[key];
+    if (!w) return;
+
+    const sheet = document.createElement("div");
+    sheet.className = "words";
+    sheet.setAttribute("role", "dialog");
+    sheet.setAttribute("aria-modal", "true");
+    sheet.setAttribute("aria-label", (w.parts && w.parts[0] && w.parts[0].title) || "Words");
+    sheet.innerHTML =
+      '<div class="words__scrim" data-close></div>' +
+      '<div class="words__panel" tabindex="-1">' +
+        '<button class="words__close" type="button" data-close aria-label="Close">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" ' +
+          'stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>' +
+        "</button>" +
+        renderWords(w) +
+      "</div>";
+    document.body.appendChild(sheet);
+    document.documentElement.classList.add("has-sheet");
+
+    const panel = sheet.querySelector(".words__panel");
+    requestAnimationFrame(() => sheet.classList.add("is-open"));
+    panel.focus({ preventScroll: true });
+
+    function close() {
+      document.removeEventListener("keydown", onKey, true);
+      document.documentElement.classList.remove("has-sheet");
+      sheet.classList.remove("is-open");
+      setTimeout(() => sheet.remove(), 320);
+      if (returnFocus && document.contains(returnFocus)) returnFocus.focus({ preventScroll: true });
+    }
+    function onKey(e) {
+      // swallow the arrows so the booklet doesn't turn underneath
+      if (e.key === "Escape") { e.stopPropagation(); close(); }
+      if (e.key === "ArrowLeft" || e.key === "ArrowRight") e.stopPropagation();
+    }
+    document.addEventListener("keydown", onKey, true);
+    sheet.addEventListener("click", (e) => { if (e.target.closest("[data-close]")) close(); });
+    return close;
   }
 
   /* ── the booklet itself ───────────────────────────────────────────────── */
@@ -236,6 +321,13 @@
       if (b) goTo(+b.dataset.go);
     });
 
+    /* "Sing along" — open that hymn's words. */
+    let closeWords = null;
+    stack.addEventListener("click", (e) => {
+      const b = e.target.closest("[data-words]");
+      if (b && !busy) closeWords = openWords(book, b.dataset.words, b);
+    });
+
     /* Tap the outer third of the paper, like a real booklet. */
     stack.addEventListener("click", (e) => {
       if (e.target.closest("a, button")) return;
@@ -282,6 +374,7 @@
     }, 60000);
 
     onLeave(() => {
+      if (closeWords) closeWords();
       document.removeEventListener("keydown", onKey);
       clearInterval(clock);
     });

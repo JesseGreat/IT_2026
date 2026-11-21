@@ -36,11 +36,12 @@
 <script src="assets/js/comingsoon.js"></script>
 <script>
   Site.page(function () {
-    if (ComingSoon.mount("church")) return;
-    var book = WEDDING.church;
-    document.querySelector("[data-title]").textContent = book.title;
-    document.querySelector("[data-subtitle]").textContent = book.subtitle || "";
-    Booklet.mount(document.getElementById("book"), book);
+    ComingSoon.gate("church", function () {
+      var book = WEDDING.church;
+      document.querySelector("[data-title]").textContent = book.title;
+      document.querySelector("[data-subtitle]").textContent = book.subtitle || "";
+      Booklet.mount(document.getElementById("book"), book);
+    });
   });
 </script>
 </body>

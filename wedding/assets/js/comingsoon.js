@@ -41,9 +41,13 @@
     const wrap = document.querySelector("main .wrap");
     if (!wrap) return false;
 
-    const initials = cfg.initials || ["O", "O"];
+    wrap.innerHTML = soonHTML(cfg, "");
+    return true;
+  }
 
-    wrap.innerHTML =
+  function soonHTML(cfg, extra) {
+    const initials = cfg.initials || ["O", "O"];
+    return (
       '<section class="soon" aria-live="polite">' +
         '<div class="soon__petals" aria-hidden="true">' + petals(9) + "</div>" +
         '<div class="soon__inner">' +
@@ -58,11 +62,85 @@
           (cfg.year ? '<p class="soon__year">' + esc(cfg.year) + "</p>" : "") +
           '<p class="soon__headline">' + esc(cfg.headline || "Coming Soon") + "</p>" +
           (cfg.note ? '<p class="soon__note">' + esc(cfg.note) + "</p>" : "") +
+          extra +
         "</div>" +
-      "</section>";
-    return true;
+      "</section>"
+    );
+  }
+
+  /* ── the passcode lock ────────────────────────────────────────────────
+     For a page in WEDDING.comingSoon.locked: open it for anyone holding the
+     passcode, and for everybody from the morning of `openOn`. */
+
+  const storeKey = (key) => "wedding-unlock-" + key;
+
+  function remembered(key, passcode) {
+    try { return localStorage.getItem(storeKey(key)) === passcode; }
+    catch (e) { return false; }
+  }
+
+  function remember(key, passcode) {
+    try { localStorage.setItem(storeKey(key), passcode); } catch (e) { /* private mode */ }
+  }
+
+  function todayISO() {
+    const d = new Date();
+    return d.getFullYear() + "-" +
+      String(d.getMonth() + 1).padStart(2, "0") + "-" +
+      String(d.getDate()).padStart(2, "0");
+  }
+
+  /* Forgive the case and stray spaces a phone keyboard adds. */
+  const tidy = (s) => String(s || "").replace(/\s+/g, "").toUpperCase();
+
+  /**
+   * Show `key`'s page through `open()` if it is free to see — otherwise draw
+   * Coming Soon, or Coming Soon with a passcode box when the page is locked.
+   */
+  function gate(key, open) {
+    if (mount(key)) return;
+
+    const cfg = window.WEDDING.comingSoon || {};
+    const lock = cfg.locked && cfg.locked[key];
+    const wrap = document.querySelector("main .wrap");
+
+    if (!lock || !wrap ||
+        (lock.openOn && todayISO() >= lock.openOn) ||
+        remembered(key, lock.passcode)) {
+      open();
+      return;
+    }
+
+    const page = wrap.innerHTML;      // the real page, put back on unlock
+    wrap.innerHTML = soonHTML(cfg,
+      '<form class="unlock" novalidate>' +
+        '<label class="unlock__label" for="unlockCode">Minister’s access</label>' +
+        '<div class="unlock__row">' +
+          '<input class="unlock__input" id="unlockCode" type="password" ' +
+            'autocomplete="off" autocapitalize="characters" spellcheck="false" ' +
+            'placeholder="Passcode" aria-describedby="unlockMsg">' +
+          '<button class="unlock__btn" type="submit">Open</button>' +
+        "</div>" +
+        '<p class="unlock__msg" id="unlockMsg" aria-live="polite"></p>' +
+      "</form>");
+
+    const form = wrap.querySelector(".unlock");
+    const input = form.querySelector("input");
+    const msg = form.querySelector(".unlock__msg");
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      if (tidy(input.value) === tidy(lock.passcode)) {
+        remember(key, lock.passcode);
+        wrap.innerHTML = page;
+        open();
+      } else {
+        msg.textContent = "That passcode isn’t right — please try again.";
+        input.select();
+      }
+    });
   }
 
   /* The laurel heart and the petals are shared with the details page. */
-  window.ComingSoon = { mount, HEART, petals };
+  window.ComingSoon = { mount, gate, HEART, petals };
 })();
