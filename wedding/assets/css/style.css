@@ -1548,12 +1548,14 @@ main { padding: 1.5rem 1.15rem calc(var(--nav-h) + 3.4rem); }
 /* ═══════════════════════════════════════════════════════════════════════════
    THE WORDS — hymn lyrics, in a sheet that slides up over the booklet
    ═════════════════════════════════════════════════════════════════════════ */
+.order__words, .words__close, .unlock__btn { -webkit-tap-highlight-color: transparent; }
 .order__words {
   display: inline-flex;
   align-items: center;
   gap: .2rem;
   margin-top: .4rem;
-  padding: .32rem .45rem .32rem .7rem;
+  min-height: 2.25rem;         /* a comfortable thumb target */
+  padding: .4rem .55rem .4rem .8rem;
   border: 1px solid rgba(138,107,20,.45);
   border-radius: 1rem;
   background: transparent;
@@ -1588,6 +1590,7 @@ html.has-sheet, html.has-sheet body { overflow: hidden; }
   position: relative;
   width: 100%;
   max-width: 30rem;
+  max-height: 88vh;            /* older Android browsers */
   max-height: 88dvh;
   overflow-y: auto;
   overscroll-behavior: contain;

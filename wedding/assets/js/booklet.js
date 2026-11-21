@@ -209,7 +209,19 @@
     requestAnimationFrame(() => sheet.classList.add("is-open"));
     panel.focus({ preventScroll: true });
 
-    function close() {
+    /* Android's Back gesture closes the sheet instead of leaving the page:
+       opening it adds a history entry (same URL), Back pops it. */
+    let pushed = false;
+    try { history.pushState({ words: key }, ""); pushed = true; } catch (e) { /* ignore */ }
+    const onPop = () => { pushed = false; close(); };
+    window.addEventListener("popstate", onPop);
+
+    let closed = false;
+    function close(leaving) {
+      if (closed) return;
+      closed = true;
+      window.removeEventListener("popstate", onPop);
+      if (pushed && !leaving) { pushed = false; history.back(); }
       document.removeEventListener("keydown", onKey, true);
       document.documentElement.classList.remove("has-sheet");
       sheet.classList.remove("is-open");
@@ -399,7 +411,7 @@
     }, 60000);
 
     onLeave(() => {
-      if (closeWords) closeWords();
+      if (closeWords) closeWords(true);
       document.removeEventListener("keydown", onKey);
       clearInterval(clock);
     });

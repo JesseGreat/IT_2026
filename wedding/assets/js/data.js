@@ -85,7 +85,7 @@ const WEDDING = {
      ───────────────────────────────────────────────────────────────────── */
   comingSoon: {
     church:      false,   // live — but behind the passcode below
-    traditional: true,
+    traditional: false,   // live — but behind the passcode below
     reception:   false,
     details:     false,
 
@@ -105,7 +105,8 @@ const WEDDING = {
        words themselves sit in this file, which anyone who knows how can
        read. Fine for an order of service, not for anything secret. */
     locked: {
-      church: { passcode: "HOLY2811", openOn: "2026-11-28" },
+      church:      { passcode: "HOLY2811", openOn: "2026-11-28" },
+      traditional: { passcode: "HOLY2811", openOn: "2026-11-28" },
     },
   },
 
@@ -237,7 +238,7 @@ const WEDDING = {
               "Sibẹ titi di oni\nN'igbeyawo Kristian\nỌlọrun wa laarin wa\nLati sure fun wa",
               "Ire ki wọn le maa bi\nKi wọn k'o si maa rẹ\nKi wọn ni'dapọ mimọ\nT'ẹnikan k'yo le tu",
               "Ba ni pe Baba, si fa\nObinrin yi f'ọkọ\nBi O ti fi Efa fun\nAdamu l'ọjọ kini",
-              "Ba wa pe Imanuẹli\nSiso ọwọ wọn pọ\nB'ẹda meji ti dapọ\nNi ara ijinlẹ Rẹ",
+              "Ba wa pe Imanuẹli\nSiso ọwọ wọn pọ\nB'ẹda meji ti dapọ\nN'ara ijinlẹ Rẹ",
               "Ba wa pe, Ẹmi Mimọ\nF'ibukun Rẹ fun wọn\nSise wọn ni aṣẹ pe\nGẹgẹ b'O ti maa nṣe",
               "Fi wọn s'abẹ abo Rẹ\nK'ibi kan ma ba wọn\nGba wọn npa ra ile Rẹ\nMa toju ọkan wọn",
               "Pẹlu wọn l'ọj'aye wọn\nAt'ọkọ at'aya\nTiti nwọn o de ọdọ Rẹ",
@@ -415,7 +416,7 @@ const WEDDING = {
               "Almighty Father, You have created all mankind to glorify You in body and in spirit. Give these children of Yours joy in one another, as living temples of the Holy Spirit, and bring them by this joy to know and share in Your creative and redeeming love; through Jesus Christ our Lord. Amen.",
               "Eternal God, true and loving Father, in holy marriage You make Your servants one. May their life together witness to Your love in this troubled world. May unity overcome division, forgiveness heal injury, and joy triumph over sorrow; through Jesus Christ our Lord. Amen.",
               "We praise You, Father, that You have made all things and hold all things in being. In the beginning You created the universe and made mankind in Your own likeness; because it was not good for man to be alone, You created them male and female, and in marriage You join man and woman in one flesh, teaching us that what You have united may never be divided. We praise You that You have made this holy mystery a symbol of the marriage of Christ with His Church, and an image of Your eternal covenant with Your people. And we pray for Your blessing on this man and woman, who come before You as partners and heirs together of Your promises. Grant that this man may love his wife as Christ loves His bride, the Church, giving Himself for it and cherishing it as His own flesh; and grant that this woman may love her husband and follow the example of those holy women whose praises are sung in the Scriptures; and as witnesses of Christ to one another, let them live to see their children's children, and bring them at the last to the fullness of life with the saints in the kingdom of heaven; through Jesus Christ our Lord. Amen.",
-              "Heavenly Father, we pray that through their marriage Oluwatobiloba and Oluwabukola may know You more clearly, love You more dearly and follow You more nearly, day by day; through Jesus Christ our Lord. Amen.",   // ← CHECK  the start of this prayer was cut off in the photo
+              "Heavenly Father, we thank You that in our earthly lives You speak of Your life. We pray that through their marriage Oluwatobiloba and Oluwabukola may know You more clearly, love You more dearly and follow You more nearly, day by day; through Jesus Christ our Lord. Amen.",
               "Almighty God, our heavenly Father, who gave marriage to be a source of blessing to mankind, we thank You for the joys of family life. May we know Your presence and peace in our homes; fill us with Your love, and use us for Your glory; through Jesus Christ our Lord.",
               { r: "The benediction:" },
               "And the blessing of God the Father, God the Son and God the Holy Spirit be upon you, now and for evermore. Amen.",
@@ -443,7 +444,7 @@ const WEDDING = {
               "Mo ntẹsiwaju lọna na\nMo ngoke si lojojumọ\nMo ngbadura bi mo ti nlọ\nOluwa jọ, gbe mi soke",
               "Ifẹ ọkan mi ko duro\nLarin 'yemeji at'ẹru\nAwọn miran le maa gbe 'bẹ\nIbi giga l'ọkan mi fẹ",
               "Mo fẹ ki n ga ju aiye lọ\nB'eṣu tilẹ ngbogun ti mi\nMo nfi igbagbọ gbọ orin na\nTi awọn mimọ nkọ loke",
-              "Mo fẹ de ibi giga julọ\nNinu ogo didan julọ\nMo ngbadura ki nle de'bẹ\nOluwa mu mi de'bẹ na",
+              "Mo fẹ de ibi giga julọ\nNinu ogo didan julọ\nMo ngbadura ki nle de'bẹ\nOluwa mu mi de'le na",
               "Fa mi lọ si ibi giga\nLaisi Rẹ nko le de'bẹ\nFa mi titi d'oke ọrun\nKi nkọrin lat'ibi giga. Amin",
             ] },
           { lang: "English", title: "I'm Pressing On",
@@ -466,58 +467,48 @@ const WEDDING = {
     pages: [
       {
         heading: "Ìkíni",
-        subtitle: "The Greeting",
+        subtitle: "The Welcome",
         items: [
-          { title: "Arrival & Seating of Guests" },
-          { title: "Opening Prayer", by: "The family elder" },
-          { title: "Introduction of the Alága", by: "Alága Ìjókòó for the bride · Alága Ìdúró for the groom" },
+          { title: "Welcoming the Bride's Family" },
+          { title: "Arrival of the Groom's Family" },
+          { title: "Praise and Worship" },
+          { title: "Opening Prayer" },
         ],
       },
       {
-        heading: "Ìdòbálẹ̀",
-        subtitle: "The Arrival of the Groom's Family",
+        heading: "Ìdí Àpéjọ",
+        subtitle: "Why We Are Gathered",
         items: [
-          { title: "The Groom's Family Seeks Permission to Enter" },
-          { title: "Ìdòbálẹ̀ — The Prostration", note: "The groom and his friends prostrate before the bride's family" },
-          { title: "Reception of the Groom's Family" },
+          { title: "Purpose of Gathering" },
+          { title: "Arrival of the Groom" },
+          { title: "Arrival of the Bride" },
         ],
       },
       {
         heading: "Ìwé Ìtọrọ",
-        subtitle: "The Letters",
+        subtitle: "The Letters & the Engagement",
         items: [
-          { title: "Reading of the Proposal Letter", by: "Read by the groom's family" },
-          { title: "Reading of the Acceptance Letter", by: "Read by the bride's family" },
-          { title: "Breaking of the Kola Nut", note: "Obì àti orógbó — for long life and blessing" },
+          { title: "Presentation of Letters", note: "Proposal & Acceptance" },
+          { title: "Engagement", note: "Presentation & sanctification of the bride's items" },
+          { title: "Pronouncement" },
         ],
       },
       {
-        heading: "Ẹrù Ìyàwó",
-        subtitle: "The Presentation of Gifts",
+        heading: "Ayẹyẹ",
+        subtitle: "The Celebration",
         items: [
-          { title: "Presentation of the Dowry & Gifts" },
-          { title: "Inspection & Acceptance by the Bride's Family" },
-          { title: "Prayers Over the Items", note: "Honey, salt, sugar, bitter kola, alligator pepper and yam" },
+          { title: "Cutting of Cake" },
+          { title: "Toast of the Couple" },
+          { title: "Guest Entertainment" },
+          { title: "Dance! Dance!! Dance!!!" },
         ],
       },
       {
-        heading: "Ìjádé Ìyàwó",
-        subtitle: "The Bride Comes Forth",
+        heading: "Ìdágbére",
+        subtitle: "The Farewell",
         items: [
-          { title: "Dance of the Bride & Her Friends" },
-          { title: "The Bride Kneels for Her Family's Blessing" },
-          { title: "The Bride Identifies Her Husband" },
-          { title: "Placing of the Fìlà", note: "The bride crowns the groom with his cap" },
-        ],
-      },
-      {
-        heading: "Ìbùkún",
-        subtitle: "The Blessing",
-        items: [
-          { title: "Exchange of Rings" },
-          { title: "Presentation of the Holy Bible" },
-          { title: "Blessing of the Couple by Both Families" },
-          { title: "Closing Prayer" },
+          { title: "Presentation of Gifts" },
+          { title: "Closing Prayer & Benediction" },
         ],
       },
     ],
