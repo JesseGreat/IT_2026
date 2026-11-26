@@ -95,8 +95,10 @@ const WEDDING = {
     note:     "Our full programme will appear here",   // set to null to hide
 
     /* A page listed here is live, but only for someone with the passcode,
-       until the morning of  openOn  — then it opens for every guest by
-       itself. Everyone else sees the Coming Soon design, with a small
+       until  openOn  — then it opens for every guest by itself, even on a
+       phone that already has the page open. Write it as
+       "2026-11-28T07:00+01:00"  (7:00 am Nigerian time); a date alone,
+       "2026-11-28", means midnight on the guest's phone. Everyone else sees the Coming Soon design, with a small
        "Minister's access" box beneath it. Once a phone has unlocked the
        page it stays unlocked. Change the passcode and every phone is
        locked out again. Delete a line to open that page to everyone now.
@@ -105,8 +107,8 @@ const WEDDING = {
        words themselves sit in this file, which anyone who knows how can
        read. Fine for an order of service, not for anything secret. */
     locked: {
-      church:      { passcode: "HOLY2811", openOn: "2026-11-28" },
-      traditional: { passcode: "HOLY2811", openOn: "2026-11-28" },
+      church:      { passcode: "HOLY2811", openOn: "2026-11-28T07:00+01:00" },
+      traditional: { passcode: "HOLY2811", openOn: "2026-11-28T07:00+01:00" },
     },
   },
 
