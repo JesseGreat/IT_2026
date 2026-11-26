@@ -138,13 +138,15 @@ const WEDDING = {
       },
       {
         heading: "Officiating Ministers",
-        items: [                              // ← CHECK  copied from the sample booklet — update with yours
-          { title: "Bishop David Oluwole" },
-          { title: "Apostle Victor Oluwanoyero" },
+        subtitle: "Vineyard Full Gospel Mission (Inc.)",
+        items: [
+          { title: "Prophet Adigun Oyegbemi Stephen" },
           { title: "Pastor (Dr.) Fakayode Sunday" },
           { title: "Pastor Oladosu Taiwo" },
-          { title: "Pastor Godwin Vincent" },
-          { title: "Pastor Oladotun Ayelagbe" },
+          { title: "Pastor Mrs. Adigun Julianah" },
+          { title: "Pastor Vincent Godwin" },
+          { title: "Pastor Nicholas Ogunlade", note: "Ekiti" },
+          { title: "Pastor Tolutope Dada", note: "Abuja" },
         ],
       },
       {
