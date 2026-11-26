@@ -1706,6 +1706,24 @@ html.has-sheet, html.has-sheet body { overflow: hidden; }
   .words__scrim, .words__panel { transition: none; }
 }
 
+/* ── when a locked page opens to everyone ─────────────────────────────── */
+.opens { margin-top: 2rem; }
+.opens__label {
+  font-size: .62rem;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: var(--gold-500);
+}
+.opens__when {
+  margin-top: .35rem;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 1.2rem;
+  color: var(--paper-100);
+}
+.opens__count { margin-top: 1.1rem; }
+.opens__count span { color: rgba(244,236,216,.62); }
+
 /* ── the passcode box under a locked Coming Soon ───────────────────────── */
 .unlock {
   max-width: 18rem;

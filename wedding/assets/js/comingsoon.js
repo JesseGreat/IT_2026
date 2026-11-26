@@ -85,11 +85,42 @@
 
   /* Has `openOn` arrived? Takes "2026-11-28T07:00+01:00", or a bare
      "2026-11-28" (midnight, phone's own time). */
-  function isOpen(openOn) {
-    if (!openOn) return false;
+  function openAt(openOn) {
+    if (!openOn) return NaN;
     const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(openOn);
-    const at = m ? new Date(+m[1], +m[2] - 1, +m[3]).getTime() : Date.parse(openOn);
+    return m ? new Date(+m[1], +m[2] - 1, +m[3]).getTime() : Date.parse(openOn);
+  }
+  function isOpen(openOn) {
+    const at = openAt(openOn);
     return !isNaN(at) && Date.now() >= at;
+  }
+
+  /* "Saturday 28 November · 7:00 am", in Nigerian time whatever the phone says. */
+  function whenText(at) {
+    const d = new Date(at);
+    try {
+      const day = d.toLocaleDateString("en-GB",
+        { weekday: "long", day: "numeric", month: "long", timeZone: "Africa/Lagos" });
+      const time = d.toLocaleTimeString("en-US",
+        { hour: "numeric", minute: "2-digit", hour12: true, timeZone: "Africa/Lagos" })
+        .replace("AM", "am").replace("PM", "pm");
+      return day.replace(",", "") + " \u00b7 " + time;
+    } catch (e) {
+      return d.toString();
+    }
+  }
+
+  /* The boxes, as on the invitation's countdown. */
+  function countHTML(ms) {
+    const s = Math.max(0, Math.floor(ms / 1000));
+    const parts = [
+      [Math.floor(s / 86400), "Days"],
+      [Math.floor(s / 3600) % 24, "Hours"],
+      [Math.floor(s / 60) % 60, "Mins"],
+      [s % 60, "Secs"],
+    ];
+    return parts.map(([n, label]) =>
+      "<div><b>" + String(n).padStart(2, "0") + "</b><span>" + label + "</span></div>").join("");
   }
 
   /* Forgive the case and stray spaces a phone keyboard adds. */
@@ -114,7 +145,16 @@
     }
 
     const page = wrap.innerHTML;      // the real page, put back on unlock
+    const at = openAt(lock.openOn);
+    const timed = !isNaN(at);
     wrap.innerHTML = soonHTML(cfg,
+      (timed
+        ? '<div class="opens">' +
+            '<p class="opens__label">Opens to everyone</p>' +
+            '<p class="opens__when">' + esc(whenText(at)) + "</p>" +
+            '<div class="countdown opens__count" aria-hidden="true">' + countHTML(at - Date.now()) + "</div>" +
+          "</div>"
+        : "") +
       '<form class="unlock" novalidate>' +
         '<label class="unlock__label" for="unlockCode">Minister’s access</label>' +
         '<div class="unlock__row">' +
@@ -140,10 +180,15 @@
       open();
     }
 
-    /* A guest already looking at the page sees it open on the hour —
-       checked every half-minute, and as soon as the phone wakes. */
-    const check = () => { if (!document.hidden && isOpen(lock.openOn)) reveal(); };
-    const timer = setInterval(check, 30000);
+    /* The countdown ticks every second, and a guest already looking at the
+       page sees it open on the hour — or as soon as the phone wakes. */
+    const count = wrap.querySelector(".opens__count");
+    const check = () => {
+      if (document.hidden) return;
+      if (isOpen(lock.openOn)) { reveal(); return; }
+      if (count) count.innerHTML = countHTML(at - Date.now());
+    };
+    const timer = setInterval(check, 1000);
     document.addEventListener("visibilitychange", check);
     onLeave(() => {
       done = true;
